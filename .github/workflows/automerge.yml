@@ -1,0 +1,48 @@
+name: automerge
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, unlabeled]
+  workflow_run:
+    workflows: [deploy-portfolio]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  statuses: read
+  actions: read
+
+concurrency:
+  group: automerge
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Check PR eligibility and auto-merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Checking open pull requests for auto-merge eligibility..."
+          gh pr list --repo "$REPO" --state open --json number,title,mergeable,isDraft | jq -c '.[]' | while read -r pr; do
+            NUMBER=$(echo "$pr" | jq -r '.number')
+            IS_DRAFT=$(echo "$pr" | jq -r '.isDraft')
+            MERGEABLE=$(echo "$pr" | jq -r '.mergeable')
+            
+            if [ "$IS_DRAFT" = "false" ] && [ "$MERGEABLE" = "MERGEABLE" ]; then
+              echo "Merging PR #$NUMBER automatically..."
+              gh pr merge "$NUMBER" --repo "$REPO" --squash --auto --delete-branch || echo "Could not auto-merge #$NUMBER"
+            else
+              echo "PR #$NUMBER is draft or not mergeable yet ($MERGEABLE)."
+            fi
+          done

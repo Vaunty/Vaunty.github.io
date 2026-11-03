@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>What's new with Matthew</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>" />
+<link rel="preload" href="assets/mascot.glb" as="fetch" type="model/gltf-binary" crossorigin />
+<style>
+  :root {
+    --bg-page: #000000;
+    --hero-card-bg: #f4f6f2;
+    --ink: #ffffff;
+    --muted: #8b949e;
+    --border-dark: #21262d;
+    --card-dark: #0d1117;
+    --card-hover: #161b22;
+    --green: #3fb950;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --yellow: #d29922;
+    --violet: #bc8cff;
+    --hero-h: min(65vh, 560px);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg-page); color: var(--ink); }
+  body {
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .page-container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 2.2rem 2.5rem 3rem;
+  }
+
+  /* ---------- header ---------- */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.6rem;
+    gap: 2rem;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 4.6vw, 3.8rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+  }
+  h1 span.name {
+    color: #ffffff;
+  }
+  header p.subtitle {
+    margin: 0;
+    font-size: clamp(0.95rem, 1.3vw, 1.25rem);
+    color: var(--muted);
+    line-height: 1.45;
+    max-width: 440px;
+    text-align: right;
+  }
+
+  /* ---------- floating rounded hero card ---------- */
+  .hero-card {
+    position: relative;
+    height: var(--hero-h);
+    background: var(--hero-card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  /* GitHub Universe style colorful mosaic pixel grid on the right */
+  .pixel-grid {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 52%;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(7, 1fr);
+    gap: 6px;
+    padding: 1.5rem 2rem 1.5rem 1rem;
+    pointer-events: auto;
+    z-index: 1;
+  }
+  .px-cell {
+    border-radius: 4px;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, filter 0.25s ease;
+  }
+  .px-cell:hover {
+    transform: scale(1.18);
+    filter: brightness(1.25);
+    z-index: 2;
+  }
+  .px-empty { opacity: 0; pointer-events: none; }
+  .px-purple { background: #8250df; }
+  .px-ltpurple { background: #a37bff; }
+  .px-crimson { background: #cf222e; }
+  .px-gold { background: #d29922; }
+  .px-green { background: #2da44e; }
+  .px-mint { background: #56d364; }
+  .px-brown { background: #9a6700; }
+  .px-dark { background: #24292f; }
+  .px-white { background: #ffffff; }
+
+  /* 3D Mascot Stage */
+  .mascot-stage {
+    position: absolute;
+    left: 55%;
+    bottom: -2%;
+    height: calc(var(--hero-h) * 1.08);
+    aspect-ratio: 1.55;
+    translate: -50% 0;
+    z-index: 3;
+  }
+  .mascot-canvas, .mascot-poster {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  .mascot-canvas { opacity: 0; transition: opacity .45s ease; touch-action: pan-y; }
+  .mascot-poster { object-fit: contain; transition: opacity .45s ease; pointer-events: none; }
+  .mascot-ready .mascot-canvas { opacity: 1; }
+  .mascot-ready .mascot-poster { opacity: 0; }
+  .mascot-fallback .mascot-canvas { display: none; }
+  .mascot-fallback .mascot-poster { opacity: 1; }
+
+  .hint {
+    position: absolute; left: 2.5rem; top: 1.8rem;
+    font: 500 .84rem var(--font-mono);
+    color: #57606a;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .hint-click { opacity: 0.75; }
+
+  .mascot-sound {
+    position: absolute; left: 2.5rem; bottom: 1.8rem;
+    display: inline-flex; align-items: center; gap: .45rem;
+    font: 500 .78rem var(--font-mono);
+    color: #24292f; background: rgba(255,255,255,.90);
+    border: 1px solid rgba(0,0,0,.12); border-radius: 999px;
+    padding: .42rem .85rem .42rem .68rem;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all .15s ease;
+    z-index: 4;
+  }
+  .mascot-sound:hover { background: #ffffff; border-color: #57606a; transform: translateY(-1px); }
+  .mascot-sound:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .mascot-sound svg { width: 14px; height: 14px; }
+  .mascot-sound[aria-pressed="true"] .wave { opacity: 1; }
+  .mascot-sound .wave { opacity: 0; transition: opacity .2s; }
+  .mascot-fallback .mascot-sound, .mascot-fallback .hint-click { display: none; }
+
+  /* ---------- nav tabs ---------- */
+  nav.tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 1.4rem;
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    background: #000000;
+    overflow: hidden;
+  }
+  .tab-btn, .tab-link {
+    background: none;
+    border: none;
+    padding: 1rem 1.6rem;
+    border-left: 3px solid var(--c);
+    color: #e6edf3;
+    text-decoration: none;
+    font-size: .95rem;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background .15s ease, color .15s ease;
+  }
+  .tab-btn:hover, .tab-link:hover {
+    background: #161b22;
+    color: #ffffff;
+  }
+  .tab-btn.active {
+    background: #1f242c;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: inset 0 -2px 0 var(--c);
+  }
+  .tab-spacer { flex: 1; }
+  .scroll-indicator {
+    padding: 1rem 1.4rem;
+    font-size: .88rem;
+    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-left: 1px solid var(--border-dark);
+  }
+
+  /* ---------- tab drawer (ONLY appears when tab is clicked) ---------- */
+  .tab-drawer {
+    display: none;
+    margin-top: 1.6rem;
+    padding: 2.2rem 2.4rem;
+    background: var(--card-dark);
+    border: 1px solid var(--border-dark);
+    border-radius: 16px;
+    animation: fadeIn .2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .tab-drawer.open {
+    display: block;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .drawer-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 1.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .drawer-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+  .drawer-close {
+    background: #161b22;
+    border: 1px solid var(--border-dark);
+    padding: 0.4rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    font-family: var(--font-mono);
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .drawer-close:hover {
+    background: #21262d;
+    color: #ffffff;
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+  }
+  .info-card {
+    background: var(--card-hover);
+    border: 1px solid var(--border-dark);
+    border-radius: 10px;
+    padding: 1.35rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: border-color .15s, transform .15s;
+  }
+  .info-card:hover {
+    border-color: #388bfd;
+    transform: translateY(-2px);
+  }
+  .info-card h3 {
+    margin: 0 0 0.4rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+  .info-meta {
+    margin: 0 0 0.75rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+  .info-desc {
+    margin: 0 0 1rem;
+    font-size: 0.90rem;
+    color: #c9d1d9;
+    line-height: 1.5;
+  }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--border-dark);
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.18rem 0.5rem;
+    border-radius: 4px;
+    background: #21262d;
+    color: #58a6ff;
+  }
+
+  /* simple dark footer */
+  footer {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-dark);
+    font-size: 0.88rem;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  footer a { color: #58a6ff; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 820px) {
+    header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    header p.subtitle { text-align: left; }
+    :root { --hero-h: min(58vh, 460px); }
+    .page-container { padding: 1.5rem 1.25rem 2.5rem; }
+    .pixel-grid { width: 70%; opacity: 0.45; }
+    .mascot-stage { left: 50%; height: auto; width: 140%; bottom: -4%; }
+    .hint { left: 1.5rem; top: 1.2rem; }
+    .mascot-sound { left: auto; right: 1.2rem; bottom: auto; top: 1rem; }
+    nav.tabs { flex-wrap: wrap; }
+    .tab-btn, .tab-link { padding: .85rem 1rem; }
+    .tab-drawer { padding: 1.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="page-container">
+    <header>
+      <h1>What's new with<br /><span class="name">Matthew</span></h1>
+      <p class="subtitle">Catch up on the projects, research and experiments I've been shipping.</p>
+    </header>
+
+    <!-- Sleek floating hero card -->
+    <section class="hero-card" id="hero" data-mascot data-mascot-glb="assets/mascot.glb">
+      <span class="hint">&gt;_ move your cursor<span class="hint-click"> · click for a sip</span></span>
+
+      <!-- Colorful GitHub Universe Pixel Grid on the right side behind the mascot -->
+      <div class="pixel-grid" aria-hidden="true">
+        <!-- Row 1 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-purple"></div><div class="px-cell px-empty"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-ltpurple"></div>
+        <!-- Row 2 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-brown"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-crimson"></div><div class="px-cell px-crimson"></div>
+        <!-- Row 3 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-crimson"></div><div class="px-cell px-brown"></div><div class="px-cell px-green"></div><div class="px-cell px-gold"></div><div class="px-cell px-dark"></div>
+        <!-- Row 4 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-green"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-brown"></div>
+        <!-- Row 5 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-gold"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-crimson"></div><div class="px-cell px-white"></div><div class="px-cell px-white"></div><div class="px-cell px-dark"></div><div class="px-cell px-empty"></div>
+        <!-- Row 6 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-mint"></div><div class="px-cell px-mint"></div>
+        <!-- Row 7 -->
+        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-brown"></div><div class="px-cell px-crimson"></div><div class="px-cell px-mint"></div>
+      </div>
+
+      <div class="mascot-stage">
+        <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's mascot: a green frog in red cat-eye visor glasses sipping a Yoo-hoo chocolate drink" width="1320" height="825" decoding="async" fetchpriority="high" />
+      </div>
+
+      <button class="mascot-sound" type="button" aria-pressed="false" title="Toggle slurp sounds (off by default)">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2.5 6v4h2.5l3.5 3V3L5 6z" fill="currentColor" stroke="none" />
+          <path class="wave" d="M11 5.5c.9.9.9 4.1 0 5M12.8 3.8c1.9 1.9 1.9 6.5 0 8.4" />
+        </svg>
+        <span>Sound off</span>
+      </button>
+    </section>
+
+    <!-- Sleek nav tabs matching the reference -->
+    <nav class="tabs" aria-label="Portfolio Sections">
+      <button type="button" class="tab-btn" data-tab="projects" style="--c: var(--green)">Projects</button>
+      <button type="button" class="tab-btn" data-tab="research" style="--c: var(--red)">Research</button>
+      <button type="button" class="tab-btn" data-tab="security" style="--c: var(--blue)">Security</button>
+      <button type="button" class="tab-btn" data-tab="experience" style="--c: var(--yellow)">Writing & Leadership</button>
+      <a href="assets/Matthew_Ngoy_Resume_Industry.pdf" target="_blank" download class="tab-link" style="--c: var(--violet)">Resume (PDF) ↗</a>
+      <div class="tab-spacer"></div>
+      <div class="scroll-indicator"><span>Scroll to explore</span> ▾</div>
+    </nav>
+
+    <!-- Interactive tab drawer: ONLY appears when user clicks a tab -->
+    <div class="tab-drawer" id="tabDrawer" role="region" aria-live="polite">
+      <div class="drawer-header">
+        <h2 class="drawer-title" id="drawerTitle">Projects</h2>
+        <button type="button" class="drawer-close" id="drawerClose" aria-label="Close panel">✕ Close</button>
+      </div>
+      <div id="drawerBody"></div>
+    </div>
+
+    <footer>
+      <div>Matthew Ngoy · Kean University B.S. CS '27 · <a href="mailto:ngoym@kean.edu">ngoym@kean.edu</a></div>
+      <div>Designed with Blender 5.2, Three.js & WebGL · <a href="https://github.com/matthewngoy" target="_blank" rel="noreferrer">GitHub</a></div>
+    </footer>
+  </div>
+
+<script>
+(() => {
+  const content = {
+    projects: {
+      title: "Projects & Engineering",
+      cards: [
+        {
+          title: "KEAN CTF 2027",
+          meta: "Sep. 2026 – Present · Python, Docker, CTFd, Cloudflare Tunnel, GitHub Actions",
+          desc: "Co-developing Docker-isolated CTF challenges and solve scripts with AI assistance, including defenses designed to resist blind AI solvers. Automated challenge validation in GitHub Actions CI.",
+          tags: ["Docker", "CTFd", "Cloudflare Tunnel", "GitHub Actions"]
+        },
+        {
+          title: "LLM Red-Team Harness",
+          meta: "June 2026 · Python, SQLite, Ollama",
+          desc: "Built an adversarial test pipeline for prompt-injection, jailbreak robustness, and data-leak evaluation against local and hosted models, saving model-judge verdicts and transcripts in SQLite and JSONL.",
+          tags: ["Adversarial Testing", "Ollama", "SQLite", "Python"]
+        },
+        {
+          title: "Real-time 3D Mascot Hero",
+          meta: "Nov. 2026 · three.js, WebGL, Blender Python",
+          desc: "Interactive 3D vinyl-toy mascot that smoothly follows the cursor with natural dual-tier body/head tracking and drinks its Yoo-hoo on click with synchronized fluid and shape-key physics.",
+          tags: ["three.js", "WebGL", "Blender", "Morph Targets"]
+        }
+      ]
+    },
+    research: {
+      title: "Research & Independent Studies",
+      cards: [
+        {
+          title: "HadAgent Verification Study",
+          meta: "Sep. 2026 – Present · Advisor: Dr. Boyang Li",
+          desc: "Investigated whether verifier acceptance in proof-of-inference protocols genuinely proves model execution. Identified a local score-validation gap and tested proposed repairs against synthetic inputs. Disclosed findings responsibly.",
+          tags: ["Proof-of-Inference", "LLM Verification", "Python", "pytest"]
+        },
+        {
+          title: "Survey on Verifiable LLM Inference",
+          meta: "Fall 2026 – Present · Advisor: Dr. Boyang Li (Target: ICBC '27)",
+          desc: "Systematic systematization of knowledge (SoK) examining verifiable inference paradigms across decentralized compute networks: comparing zk-SNARKs, TEEs, optimistic fraud challenges, and watermarking.",
+          tags: ["SoK / Survey", "zkML", "TEE Security", "ICBC '27"]
+        },
+        {
+          title: "Gen Z Housing Demographics",
+          meta: "2026 · NSF IUSE Scholars Academy · Great Minds in STEM '26",
+          desc: "Corrected a county/state aggregation mismatch as sole student author; presented the empirical county-level association at GMiS without asserting causal overreach.",
+          tags: ["NSF IUSE", "Data Analytics", "Python", "GMiS '26"]
+        },
+        {
+          title: "Debate Coach LLM Evaluation",
+          meta: "Feb. – Apr. 2026 · CRA UR2PhD",
+          desc: "Helped fine-tune and benchmark adversarial LLM debate agents with teammates. Audited citation reliability, conducted participant interviews, and presented at the CRA UR2PhD showcase.",
+          tags: ["CRA UR2PhD", "LLM-as-Judge", "Node.js", "Citation Auditing"]
+        }
+      ]
+    },
+    security: {
+      title: "Cybersecurity & Incident Research",
+      cards: [
+        {
+          title: "Non-Profit Cyber Incident Repository",
+          meta: "May 2026 – Present · Kean Center for Cybersecurity",
+          desc: "Investigated nonprofit cyber incidents through OSINT, classifying incident reports by CIA-triad impact, CISA critical sector, and TAG Cyber taxonomy.",
+          tags: ["OSINT", "Incident Analysis", "CISA Taxonomy", "Threat Intel"]
+        },
+        {
+          title: "Mobile ACDC Infrastructure",
+          meta: "Kean Center for Cybersecurity",
+          desc: "Designed solar-power and rack-energy monitoring for Mobile ACDC, the Center's portable teaching data center, and built an Arduino/ESP8266 IoT demonstration lab.",
+          tags: ["IoT Security", "Arduino/ESP8266", "Hardware", "Monitoring"]
+        },
+        {
+          title: "STEaM Cyber Instruction",
+          meta: "Port Authority of NY/NJ STEaM Camp",
+          desc: "Configured 30 classroom laptops and taught 12 lessons covering cryptography, programming, and network addressing to 60 high school students.",
+          tags: ["Teaching", "Cryptography", "Network Security"]
+        }
+      ]
+    },
+    experience: {
+      title: "Writing, Experience & Leadership",
+      cards: [
+        {
+          title: "Secretary · Women in CyberSecurity (WiCyS)",
+          meta: "Sep. 2026 – Present · Kean University Chapter",
+          desc: "Coordinated guest-speaker scheduling and campus planning for PHD4FREE!, developing the graduate research funding symposium. Presented pathways into paid research and fellowships to 15 attendees.",
+          tags: ["Leadership", "Event Planning", "WiCyS"]
+        },
+        {
+          title: "Peer Mentor / Code Samurai",
+          meta: "Sep. 2026 – Present & Jan. – May 2025 · Kean Dept. of CS",
+          desc: "Guide undergraduate students through Python, SQL, data structures, and debugging in one-on-one sessions. Volunteered in Spring 2025 and returned as a paid mentor in Fall 2026.",
+          tags: ["Mentorship", "Python", "Data Structures", "SQL"]
+        },
+        {
+          title: "International Youth Delegate · IFWY",
+          meta: "Sep. – Oct. 2025 · Cornell Tech & Seoul, South Korea",
+          desc: "Spearheaded SelectSolar proposal to deliver low-cost solar solutions to non-profits. Selected for Cornell Tech fellowship, then voted 1 of 25 North American delegates for the IFWY Final Conference in Seoul.",
+          tags: ["Fellowship", "Sustainability", "Global Policy"]
+        }
+      ]
+    }
+  };
+
+  const drawer = document.getElementById("tabDrawer");
+  const drawerTitle = document.getElementById("drawerTitle");
+  const drawerBody = document.getElementById("drawerBody");
+  const drawerClose = document.getElementById("drawerClose");
+  const tabButtons = document.querySelectorAll(".tab-btn");
+
+  let activeTab = null;
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.tab;
+      if (activeTab === tab) {
+        closeDrawer();
+        return;
+      }
+      openTab(tab);
+    });
+  });
+
+  drawerClose.addEventListener("click", closeDrawer);
+
+  function openTab(tab) {
+    const data = content[tab];
+    if (!data) return;
+    activeTab = tab;
+    tabButtons.forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
+    drawerTitle.textContent = data.title;
+    drawerBody.innerHTML = `
+      <div class="card-grid">
+        ${data.cards.map(c => `
+          <div class="info-card">
+            <div>
+              <h3>${c.title}</h3>
+              <div class="info-meta">${c.meta}</div>
+              <div class="info-desc">${c.desc}</div>
+            </div>
+            <div class="tag-row">
+              ${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    `;
+    drawer.classList.add("open");
+    drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function closeDrawer() {
+    activeTab = null;
+    drawer.classList.remove("open");
+    tabButtons.forEach((b) => b.classList.remove("active"));
+  }
+})();
+</script>
+<script type="module" src="hero.js"></script>
+</body>
+</html>

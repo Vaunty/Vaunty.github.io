@@ -1,0 +1,63 @@
+name: deploy-portfolio
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify Site & Assets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Verify WebGL and Assets
+        run: |
+          echo "Verifying site structure..."
+          test -f index.html || (echo "Missing index.html" && exit 1)
+          test -f hero.js || (echo "Missing hero.js" && exit 1)
+          test -f assets/mascot.glb || (echo "Missing assets/mascot.glb" && exit 1)
+          test -f assets/poster.webp || (echo "Missing assets/poster.webp" && exit 1)
+          test -f assets/Matthew_Ngoy_Resume_Industry.pdf || (echo "Missing Industry Resume PDF" && exit 1)
+          test -f assets/Matthew_Ngoy_Resume_Research.pdf || (echo "Missing Research Resume PDF" && exit 1)
+          echo "All portfolio assets verified successfully!"
+
+  deploy:
+    name: Deploy to GitHub Pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: verify
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
