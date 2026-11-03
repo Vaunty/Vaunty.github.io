@@ -16,11 +16,12 @@
     --card-dark: #0d1117;
     --card-hover: #161b22;
     --green: #3fb950;
+    --teal: #2dd4bf;
     --red: #f85149;
     --blue: #58a6ff;
     --yellow: #d29922;
     --violet: #bc8cff;
-    --hero-h: min(65vh, 560px);
+    --hero-h: min(68vh, 575px);
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
@@ -71,7 +72,7 @@
   .hero-card {
     position: relative;
     height: var(--hero-h);
-    background: var(--hero-card-bg);
+    background: radial-gradient(circle at 68% 52%, #ffffff 0%, #f4f6f2 58%, #e8eee5 100%);
     border-radius: 20px;
     overflow: hidden;
     cursor: default;
@@ -80,50 +81,13 @@
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
   }
 
-  /* GitHub Universe style colorful mosaic pixel grid on the right */
-  .pixel-grid {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 52%;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(7, 1fr);
-    gap: 6px;
-    padding: 1.5rem 2rem 1.5rem 1rem;
-    pointer-events: auto;
-    z-index: 1;
-  }
-  .px-cell {
-    border-radius: 4px;
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, filter 0.25s ease;
-  }
-  .px-cell:hover {
-    transform: scale(1.18);
-    filter: brightness(1.25);
-    z-index: 2;
-  }
-  .px-empty { opacity: 0; pointer-events: none; }
-  .px-purple { background: #8250df; }
-  .px-ltpurple { background: #a37bff; }
-  .px-crimson { background: #cf222e; }
-  .px-gold { background: #d29922; }
-  .px-green { background: #2da44e; }
-  .px-mint { background: #56d364; }
-  .px-brown { background: #9a6700; }
-  .px-dark { background: #24292f; }
-  .px-white { background: #ffffff; }
-
-  /* 3D Mascot Stage */
+  /* Full-width 3D stage framing both the 3D Blender Chat Bubble (left) and 3D Mascot (right) */
   .mascot-stage {
     position: absolute;
-    left: 55%;
-    bottom: -2%;
-    height: calc(var(--hero-h) * 1.08);
-    aspect-ratio: 1.55;
-    translate: -50% 0;
-    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
   }
   .mascot-canvas, .mascot-poster {
     position: absolute; inset: 0; width: 100%; height: 100%;
@@ -136,29 +100,119 @@
   .mascot-fallback .mascot-poster { opacity: 1; }
 
   .hint {
-    position: absolute; left: 2.5rem; top: 1.8rem;
+    position: absolute; left: 2.2rem; top: 1.35rem;
     font: 500 .84rem var(--font-mono);
     color: #57606a;
     pointer-events: none;
     z-index: 4;
   }
-  .hint-click { opacity: 0.75; }
+  .hint .prompt-caret {
+    color: #f02b36;
+    font-weight: 700;
+  }
+  .hint-click { opacity: 0.82; }
+
+  /* ---------- Sleek Terminal "Ask Me Anything" Prompt Bar ---------- */
+  .ask-bar-wrap {
+    position: absolute;
+    left: 2.2rem;
+    bottom: 1.15rem;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    width: min(60%, 640px);
+  }
+  .ask-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(8px);
+    border: 2px solid #1d1c22;
+    border-radius: 999px;
+    padding: 0.34rem 0.42rem 0.34rem 0.88rem;
+    box-shadow: 4px 5px 0px #1d1c22, 0 8px 20px rgba(29, 28, 34, 0.10);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  }
+  .ask-form:focus-within {
+    border-color: #3f9c38;
+    transform: translateY(-1px);
+    box-shadow: 5px 6px 0px #1d1c22, 0 10px 24px rgba(63, 156, 56, 0.18);
+  }
+  .ask-prefix {
+    font: 700 0.86rem var(--font-mono);
+    color: #f02b36;
+    flex-shrink: 0;
+    user-select: none;
+  }
+  .ask-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font: 500 0.82rem var(--font-mono);
+    color: #1d1c22;
+    min-width: 0;
+  }
+  .ask-input::placeholder {
+    color: #6e7781;
+  }
+  .ask-submit {
+    background: #1d1c22;
+    color: #ffffff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.36rem 0.82rem;
+    font: 600 0.75rem var(--font-mono);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .ask-submit:hover {
+    background: #3f9c38;
+    transform: translateX(1px);
+  }
+  .ask-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    padding-left: 0.25rem;
+  }
+  .ask-chip {
+    background: rgba(255, 255, 255, 0.85);
+    color: #24292f;
+    border: 1.5px solid #1d1c22;
+    border-radius: 999px;
+    padding: 0.16rem 0.58rem;
+    font: 600 0.69rem var(--font-mono);
+    cursor: pointer;
+    box-shadow: 2px 2px 0px #1d1c22;
+    transition: all 0.14s ease;
+  }
+  .ask-chip:hover {
+    background: #e9f7e7;
+    color: #1b5e20;
+    transform: translateY(-1px);
+  }
 
   .mascot-sound {
-    position: absolute; left: 2.5rem; bottom: 1.8rem;
+    position: absolute; right: 2.2rem; bottom: 1.25rem;
     display: inline-flex; align-items: center; gap: .45rem;
-    font: 500 .78rem var(--font-mono);
-    color: #24292f; background: rgba(255,255,255,.90);
-    border: 1px solid rgba(0,0,0,.12); border-radius: 999px;
-    padding: .42rem .85rem .42rem .68rem;
+    font: 600 .78rem var(--font-mono);
+    color: #1d1c22; background: #ffffff;
+    border: 2px solid #1d1c22; border-radius: 999px;
+    box-shadow: 3px 4px 0px #1d1c22;
+    padding: .42rem .88rem .42rem .70rem;
     cursor: pointer;
-    backdrop-filter: blur(8px);
     transition: all .15s ease;
-    z-index: 4;
+    z-index: 5;
   }
-  .mascot-sound:hover { background: #ffffff; border-color: #57606a; transform: translateY(-1px); }
+  .mascot-sound:hover { background: #e9f7e7; transform: translateY(-1px); box-shadow: 4px 5px 0px #1d1c22; }
   .mascot-sound:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .mascot-sound svg { width: 14px; height: 14px; }
+  .mascot-sound[aria-pressed="true"] { background: #e9f7e7; color: #1b5e20; }
   .mascot-sound[aria-pressed="true"] .wave { opacity: 1; }
   .mascot-sound .wave { opacity: 0; transition: opacity .2s; }
   .mascot-fallback .mascot-sound, .mascot-fallback .hint-click { display: none; }
@@ -176,11 +230,11 @@
   .tab-btn, .tab-link {
     background: none;
     border: none;
-    padding: 1rem 1.6rem;
+    padding: 1rem 1.45rem;
     border-left: 3px solid var(--c);
     color: #e6edf3;
     text-decoration: none;
-    font-size: .95rem;
+    font-size: .94rem;
     font-family: inherit;
     font-weight: 500;
     cursor: pointer;
@@ -201,8 +255,8 @@
   }
   .tab-spacer { flex: 1; }
   .scroll-indicator {
-    padding: 1rem 1.4rem;
-    font-size: .88rem;
+    padding: 1rem 1.35rem;
+    font-size: .86rem;
     color: var(--muted);
     display: inline-flex;
     align-items: center;
@@ -210,7 +264,7 @@
     border-left: 1px solid var(--border-dark);
   }
 
-  /* ---------- tab drawer (ONLY appears when tab is clicked) ---------- */
+  /* ---------- tab drawer ---------- */
   .tab-drawer {
     display: none;
     margin-top: 1.6rem;
@@ -284,6 +338,14 @@
     font-weight: 600;
     color: #ffffff;
   }
+  .info-card h3 a {
+    color: inherit;
+    text-decoration: none;
+  }
+  .info-card h3 a:hover {
+    color: #58a6ff;
+    text-decoration: underline;
+  }
   .info-meta {
     margin: 0 0 0.75rem;
     font-size: 0.82rem;
@@ -313,6 +375,83 @@
     color: #58a6ff;
   }
 
+  /* ---------- Chronological Experience Timeline ---------- */
+  .timeline-list {
+    position: relative;
+    margin: 0.5rem 0 0.5rem 0.75rem;
+    padding-left: 2rem;
+    border-left: 2px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+  .tl-item {
+    position: relative;
+    background: var(--card-hover);
+    border: 1px solid var(--border-dark);
+    border-radius: 12px;
+    padding: 1.25rem 1.45rem;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .tl-item:hover {
+    border-color: #3fb950;
+    transform: translateX(3px);
+  }
+  .tl-dot {
+    position: absolute;
+    left: -2.48rem;
+    top: 1.4rem;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--tl-c, var(--green));
+    border: 3px solid var(--card-dark);
+    box-shadow: 0 0 0 2px var(--tl-c, var(--green));
+  }
+  .tl-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .tl-date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #3fb950;
+    background: rgba(63, 185, 80, 0.12);
+    border: 1px solid rgba(63, 185, 80, 0.3);
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+  }
+  .tl-cat {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tl-title {
+    margin: 0 0 0.22rem;
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+  .tl-org {
+    margin: 0 0 0.65rem;
+    font-size: 0.85rem;
+    color: #8b949e;
+    font-family: var(--font-mono);
+  }
+  .tl-desc {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #c9d1d9;
+    line-height: 1.52;
+  }
+
   /* simple dark footer */
   footer {
     margin-top: 3.5rem;
@@ -328,15 +467,14 @@
   footer a { color: #58a6ff; text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
-  @media (max-width: 820px) {
+  @media (max-width: 920px) {
     header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
     header p.subtitle { text-align: left; }
-    :root { --hero-h: min(58vh, 460px); }
+    :root { --hero-h: 580px; }
     .page-container { padding: 1.5rem 1.25rem 2.5rem; }
-    .pixel-grid { width: 70%; opacity: 0.45; }
-    .mascot-stage { left: 50%; height: auto; width: 140%; bottom: -4%; }
-    .hint { left: 1.5rem; top: 1.2rem; }
-    .mascot-sound { left: auto; right: 1.2rem; bottom: auto; top: 1rem; }
+    .hint { left: 1.25rem; top: 1rem; }
+    .ask-bar-wrap { left: 1.2rem; right: 1.2rem; width: auto; bottom: 3.8rem; }
+    .mascot-sound { right: 1.2rem; bottom: 0.9rem; }
     nav.tabs { flex-wrap: wrap; }
     .tab-btn, .tab-link { padding: .85rem 1rem; }
     .tab-drawer { padding: 1.5rem 1.25rem; }
@@ -350,33 +488,37 @@
       <p class="subtitle">Catch up on the projects, research and experiments I've been shipping.</p>
     </header>
 
-    <!-- Sleek floating hero card -->
+    <!-- Sleek floating hero card with 3D Blender Chat Bubble + 3D Mascot + Terminal Ask Bar -->
     <section class="hero-card" id="hero" data-mascot data-mascot-glb="assets/mascot.glb">
-      <span class="hint">&gt;_ move your cursor<span class="hint-click"> · click for a sip</span></span>
-
-      <!-- Colorful GitHub Universe Pixel Grid on the right side behind the mascot -->
-      <div class="pixel-grid" aria-hidden="true">
-        <!-- Row 1 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-purple"></div><div class="px-cell px-empty"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-ltpurple"></div><div class="px-cell px-ltpurple"></div>
-        <!-- Row 2 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-brown"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-crimson"></div><div class="px-cell px-crimson"></div>
-        <!-- Row 3 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-crimson"></div><div class="px-cell px-brown"></div><div class="px-cell px-green"></div><div class="px-cell px-gold"></div><div class="px-cell px-dark"></div>
-        <!-- Row 4 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-green"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-brown"></div>
-        <!-- Row 5 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-gold"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-crimson"></div><div class="px-cell px-white"></div><div class="px-cell px-white"></div><div class="px-cell px-dark"></div><div class="px-cell px-empty"></div>
-        <!-- Row 6 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-white"></div><div class="px-cell px-gold"></div><div class="px-cell px-mint"></div><div class="px-cell px-mint"></div>
-        <!-- Row 7 -->
-        <div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-empty"></div><div class="px-cell px-gold"></div><div class="px-cell px-brown"></div><div class="px-cell px-crimson"></div><div class="px-cell px-mint"></div>
-      </div>
+      <span class="hint"><span class="prompt-caret">&gt;_</span> move your cursor<span class="hint-click"> · click box for a sip · click 3D bubble for next</span></span>
 
       <div class="mascot-stage">
-        <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's mascot: a green frog in red cat-eye visor glasses sipping a Yoo-hoo chocolate drink" width="1320" height="825" decoding="async" fetchpriority="high" />
+        <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's 3D mascot and 3D cartoon speech bubble: a green frog in red cat-eye visor glasses holding a Yoo-hoo chocolate drink with both hands" width="1600" height="1000" decoding="async" fetchpriority="high" />
       </div>
 
-      <button class="mascot-sound" type="button" aria-pressed="false" title="Toggle slurp sounds (off by default)">
+      <!-- Sleek Terminal Chatbot Bar -->
+      <div class="ask-bar-wrap" data-ask-bar>
+        <form class="ask-form" id="mascotAskForm" autocomplete="off">
+          <span class="ask-prefix">&gt;_</span>
+          <input
+            type="text"
+            class="ask-input"
+            id="mascotAskInput"
+            placeholder="type your question, or ask me anything..."
+            aria-label="Type your question, or ask Matthew anything"
+          />
+          <button type="submit" class="ask-submit">Ask ↵</button>
+        </form>
+        <div class="ask-chips" aria-label="Suggested questions">
+          <button type="button" class="ask-chip" data-q="Tell me about the Kean C.Y.B.E.R. Talk radio show">🎙️ C.Y.B.E.R. Talk</button>
+          <button type="button" class="ask-chip" data-q="What did you say about fake toll texts?">📱 Fake Toll Texts</button>
+          <button type="button" class="ask-chip" data-q="Tell me about your HadAgent research">🔬 HadAgent</button>
+          <button type="button" class="ask-chip" data-q="Tell me about IFWY Seoul and SelectSolar">🌍 IFWY Seoul</button>
+          <button type="button" class="ask-chip" data-q="What are your technical skills?">💻 Tech Stack</button>
+        </div>
+      </div>
+
+      <button class="mascot-sound" type="button" aria-pressed="false" title="Toggle Roblox, Minecraft & Fortnite drinking sounds">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M2.5 6v4h2.5l3.5 3V3L5 6z" fill="currentColor" stroke="none" />
           <path class="wave" d="M11 5.5c.9.9.9 4.1 0 5M12.8 3.8c1.9 1.9 1.9 6.5 0 8.4" />
@@ -385,130 +527,282 @@
       </button>
     </section>
 
-    <!-- Sleek nav tabs matching the reference -->
+    <!-- Sleek nav tabs including the Timeline tab -->
     <nav class="tabs" aria-label="Portfolio Sections">
+      <button type="button" class="tab-btn" data-tab="timeline" style="--c: var(--teal)">Timeline</button>
       <button type="button" class="tab-btn" data-tab="projects" style="--c: var(--green)">Projects</button>
       <button type="button" class="tab-btn" data-tab="research" style="--c: var(--red)">Research</button>
       <button type="button" class="tab-btn" data-tab="security" style="--c: var(--blue)">Security</button>
-      <button type="button" class="tab-btn" data-tab="experience" style="--c: var(--yellow)">Writing & Leadership</button>
+      <button type="button" class="tab-btn" data-tab="experience" style="--c: var(--yellow)">Writing &amp; Leadership</button>
       <a href="assets/Matthew_Ngoy_Resume_Industry.pdf" target="_blank" download class="tab-link" style="--c: var(--violet)">Resume (PDF) ↗</a>
       <div class="tab-spacer"></div>
-      <div class="scroll-indicator"><span>Scroll to explore</span> ▾</div>
+      <div class="scroll-indicator"><span>Click a tab to explore</span> ▾</div>
     </nav>
 
-    <!-- Interactive tab drawer: ONLY appears when user clicks a tab -->
+    <!-- Interactive tab drawer -->
     <div class="tab-drawer" id="tabDrawer" role="region" aria-live="polite">
       <div class="drawer-header">
-        <h2 class="drawer-title" id="drawerTitle">Projects</h2>
+        <h2 class="drawer-title" id="drawerTitle">Timeline</h2>
         <button type="button" class="drawer-close" id="drawerClose" aria-label="Close panel">✕ Close</button>
       </div>
       <div id="drawerBody"></div>
     </div>
 
     <footer>
-      <div>Matthew Ngoy · Kean University B.S. CS '27 · <a href="mailto:ngoym@kean.edu">ngoym@kean.edu</a></div>
-      <div>Designed with Blender 5.2, Three.js & WebGL · <a href="https://github.com/matthewngoy" target="_blank" rel="noreferrer">GitHub</a></div>
+      <div>Matthew Ngoy · Kean University B.S. CS (Cybersecurity) '27 · <a href="mailto:ngoym@kean.edu">ngoym@kean.edu</a></div>
+      <div>Built with Blender 5.2, Three.js &amp; WebGL · <a href="https://github.com/Vaunty" target="_blank" rel="noreferrer">GitHub (@Vaunty)</a> · <a href="https://www.linkedin.com/in/matthewngoy/" target="_blank" rel="noreferrer">LinkedIn</a></div>
     </footer>
   </div>
 
 <script>
 (() => {
+  // ---------------- Terminal "Ask Me Anything" Chatbot Wiring ----------------
+  const askForm = document.getElementById("mascotAskForm");
+  const askInput = document.getElementById("mascotAskInput");
+  const askChips = document.querySelectorAll(".ask-chip");
+
+  askForm?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = askInput.value.trim();
+    if (!q) return;
+    window.__mascot?.ask?.(q);
+    askInput.blur();
+  });
+
+  askChips.forEach((chip) => {
+    chip.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const q = chip.dataset.q || chip.textContent;
+      if (askInput) askInput.value = q;
+      window.__mascot?.ask?.(q);
+    });
+  });
+
+  // ---------------- Portfolio Sections & Chronological Timeline ----------------
+  const timelineEvents = [
+    {
+      date: "Nov. 2, 2026",
+      cat: "Public Outreach · Cyber Radio",
+      color: "#2dd4bf",
+      title: "On-Air Panelist · Kean C.Y.B.E.R. Talk Radio Show (WKNJ 90.3 FM)",
+      org: "Kean University Center for Cybersecurity · Panel with Paris, Sherwin & Farbah · Union, NJ",
+      desc: "Featured speaker on WKNJ 90.3 FM's C.Y.B.E.R. Talk broadcast. Led 4 on-air segments: spotting Fake Toll Text smishing scams (never replying STOP, forwarding to 7726 SPAM & ReportFraud.FTC.gov), navigating the cybersecurity umbrella from digital forensics and nonprofit incident investigation to AI security research, staying safe on public Wi-Fi (why HTTPS encrypts traffic but doesn't guarantee a site is legitimate), and overcoming password reuse & tracking cookies with password managers."
+    },
+    {
+      date: "Sep. 2026 – Present",
+      cat: "Research · AI Security",
+      color: "#f85149",
+      title: "Independent Study: Red-Teaming HadAgent & Verifiable LLM Inference SoK",
+      org: "Kean University · Advisor: Dr. Boyang Li · Union, NJ",
+      desc: "Investigating whether verifier acceptance in proof-of-inference protocols establishes genuine model execution. Identified a local score-validation gap in a copied HadAgent prototype (where the original validator accepted 70/78 below-threshold synthetic submissions vs. 0/78 after repair), responsibly disclosed findings to the author, and co-authoring a Systematization of Knowledge (SoK) survey targeting ICBC 2027."
+    },
+    {
+      date: "Sep. 2026 – Present",
+      cat: "Experience · Cybersecurity",
+      color: "#58a6ff",
+      title: "Cybersecurity Research Intern (Fall)",
+      org: "Kean University Center for Cybersecurity · Advisor: Stanley Mierzwa · Union, NJ",
+      desc: "Investigate nonprofit cyber incidents through OSINT for the Non-Profit Cyber Incident Repository (classifying by CIA-triad impact, CISA sector, and TAG Cyber taxonomy), design solar-power and rack-energy monitoring for the Mobile ACDC teaching data center, and built an Arduino/ESP8266 IoT smart-home lab."
+    },
+    {
+      date: "Sep. 2026 – Present",
+      cat: "Project · Security Engineering",
+      color: "#3fb950",
+      title: "Co-Developer · KEAN CTF 2027",
+      org: "Kean University · Python, Docker, CTFd, Cloudflare Tunnel, GitHub Actions",
+      desc: "Co-developing Docker-isolated CTF challenges and solve scripts with two teammates and AI assistance, including defenses designed to resist blind AI solvers. Automated challenge validation in GitHub Actions and fixed an unintended flag leak and broken hints through a player audit."
+    },
+    {
+      date: "Sep. 2026 – Present",
+      cat: "Leadership · Campus Community",
+      color: "#d29922",
+      title: "Secretary · Women in CyberSecurity (WiCyS)",
+      org: "Kean University Chapter · Union, NJ",
+      desc: "Coordinated guest-speaker scheduling and campus event planning for PHD4FREE! (developed Aug.–Oct. 2026). Presented pathways into undergraduate research, paid programs, and graduate fellowships alongside Notre Dame PhD student Demetrius Hernandez to 15 attendees."
+    },
+    {
+      date: "Sep. 2026 – Present & Jan. – May 2025",
+      cat: "Teaching & Mentorship",
+      color: "#bc8cff",
+      title: "Peer Mentor / Code Samurai",
+      org: "Kean University Department of Computer Science & Technology · Union, NJ",
+      desc: "Guide undergraduate students one-on-one through Python, SQL, data structures, and debugging. Volunteered in Spring 2025, paused to focus on research and projects, and returned as a paid mentor in Fall 2026."
+    },
+    {
+      date: "Summer – Sep. 2026",
+      cat: "Research · Data Analytics",
+      color: "#f85149",
+      title: "Sole Student Author · Gen Z Housing Demographics",
+      org: "NSF IUSE Scholars Academy · Presented at Great Minds in STEM (GMiS) '26",
+      desc: "Corrected a county/state aggregation mismatch in housing and demographic datasets as sole student author and presented the empirical county-level association at the September 2026 GMiS conference without inferring causal overreach."
+    },
+    {
+      date: "June 2026",
+      cat: "Project · LLM Security",
+      color: "#3fb950",
+      title: "Creator · LLM Red-Team Harness",
+      org: "Open Source (Vaunty/legacy-red-team-harness) · Python, SQLite, Ollama",
+      desc: "Built an AI-assisted adversarial testing pipeline for prompt-injection, jailbreak, and data-leak evaluations against local and hosted LLMs, preserving model-judge verdicts and transcripts in SQLite and JSONL."
+    },
+    {
+      date: "May – Aug. 2026",
+      cat: "Internship · Cyber Education & Global",
+      color: "#58a6ff",
+      title: "Summer WELL Cybersecurity Intern",
+      org: "Kean University Center for Cybersecurity · Union, NJ / Wenzhou & Beijing, China",
+      desc: "Configured 30 classroom laptops and taught 12 lessons covering cryptography, programming, and IP addressing to 60 high school students at the Port Authority of NY/NJ STEaM Camp; participated in international study in Wenzhou and Beijing supported by the Young Envoys Scholarship."
+    },
+    {
+      date: "Feb. – Apr. 2026",
+      cat: "Research · LLM Evaluation",
+      color: "#f85149",
+      title: "Undergraduate Researcher · Debate Coach LLM Evaluation",
+      org: "CRA UR2PhD · JavaScript, Node.js, OpenAI API",
+      desc: "Helped fine-tune and evaluate LLM debate coaches with two teammates; audited citation reliability with AI assistance, conducted participant interviews, and presented findings at the CRA UR2PhD research showcase."
+    },
+    {
+      date: "Sep. – Oct. 2025",
+      cat: "Fellowship · International Policy",
+      color: "#2dd4bf",
+      title: "International Youth Delegate & Cornell Tech Fellow",
+      org: "International Forum \"We, the Youth\" (IFWY) · New York, NY & Seoul, South Korea",
+      desc: "Spearheaded project design and scope for SelectSolar to divert solar panels from landfills and deliver low-cost clean energy to educational and non-profit institutions. Selected for a fully funded fellowship at Cornell Tech, then voted 1 of 25 North American delegates to the IFWY Final Conference in Seoul."
+    },
+    {
+      date: "2025",
+      cat: "Research · AI in Education",
+      color: "#f85149",
+      title: "First Author · Adaptive Learning with LLMs",
+      org: "NSF IUSE Scholars Academy · Presented at Great Minds in STEM (GMiS) '25",
+      desc: "Prepared and checked synthetic tutoring dialogues with Node.js, monitored fine-tuning jobs, and presented qualitative response comparisons as first author at Great Minds in STEM."
+    }
+  ];
+
   const content = {
+    timeline: {
+      title: "Experience & Research Timeline (2025 – Present)",
+      isTimeline: true
+    },
     projects: {
       title: "Projects & Engineering",
       cards: [
         {
           title: "KEAN CTF 2027",
           meta: "Sep. 2026 – Present · Python, Docker, CTFd, Cloudflare Tunnel, GitHub Actions",
-          desc: "Co-developing Docker-isolated CTF challenges and solve scripts with AI assistance, including defenses designed to resist blind AI solvers. Automated challenge validation in GitHub Actions CI.",
+          desc: "Co-develop Docker-isolated CTF challenges and solve scripts with AI assistance and two teammates, including defenses intended to resist blind AI solvers. Automated challenge validation in GitHub Actions and fixed an unintended flag leak and broken hints through a player audit.",
           tags: ["Docker", "CTFd", "Cloudflare Tunnel", "GitHub Actions"]
         },
         {
           title: "LLM Red-Team Harness",
+          link: "https://github.com/Vaunty/legacy-red-team-harness",
           meta: "June 2026 · Python, SQLite, Ollama",
-          desc: "Built an adversarial test pipeline for prompt-injection, jailbreak robustness, and data-leak evaluation against local and hosted models, saving model-judge verdicts and transcripts in SQLite and JSONL.",
+          desc: "Built an AI-assisted pipeline for prompt-injection, jailbreak, and data-leak tests, saving model-judge verdicts and transcripts in SQLite and JSONL with offline reproducible tests.",
           tags: ["Adversarial Testing", "Ollama", "SQLite", "Python"]
         },
         {
-          title: "Real-time 3D Mascot Hero",
-          meta: "Nov. 2026 · three.js, WebGL, Blender Python",
-          desc: "Interactive 3D vinyl-toy mascot that smoothly follows the cursor with natural dual-tier body/head tracking and drinks its Yoo-hoo on click with synchronized fluid and shape-key physics.",
-          tags: ["three.js", "WebGL", "Blender", "Morph Targets"]
+          title: "Real-Time 3D Mascot & Blender Chat Bubble",
+          meta: "Nov. 2026 · three.js, WebGL, Blender 5.2 Python",
+          desc: "Interactive 3D vinyl-toy frog mascot & 3D Blender cartoon speech bubble (`ChatBubbleFrame` + `ChatBubbleFace`) with live CanvasTexture Q&A chatbot, dual-arm Yoo-hoo rig, rosy cheek blush shader, and Roblox/Minecraft/Fortnite audio.",
+          tags: ["three.js", "Blender 5.2", "3D Chat Bubble", "Custom Shaders"]
         }
       ]
     },
     research: {
-      title: "Research & Independent Studies",
+      title: "Research & Presentations",
       cards: [
         {
           title: "HadAgent Verification Study",
+          link: "https://github.com/Vaunty/hadagent-verification-study",
           meta: "Sep. 2026 – Present · Advisor: Dr. Boyang Li",
-          desc: "Investigated whether verifier acceptance in proof-of-inference protocols genuinely proves model execution. Identified a local score-validation gap and tested proposed repairs against synthetic inputs. Disclosed findings responsibly.",
+          desc: "Investigated whether verifier acceptance establishes model execution by directing and interpreting AI-designed, AI-run tests of a copied HadAgent verifier. Identified a local score-validation gap (70/78 below-threshold acceptance vs. 0/78 after repair) and disclosed findings to the authors.",
           tags: ["Proof-of-Inference", "LLM Verification", "Python", "pytest"]
         },
         {
-          title: "Survey on Verifiable LLM Inference",
+          title: "Survey on Verifiable LLM Inference (SoK)",
           meta: "Fall 2026 – Present · Advisor: Dr. Boyang Li (Target: ICBC '27)",
-          desc: "Systematic systematization of knowledge (SoK) examining verifiable inference paradigms across decentralized compute networks: comparing zk-SNARKs, TEEs, optimistic fraud challenges, and watermarking.",
-          tags: ["SoK / Survey", "zkML", "TEE Security", "ICBC '27"]
+          desc: "Systematization of Knowledge (SoK) examining verifiable inference mechanisms across decentralized AI networks — comparing zkML proofs, TEEs, optimistic fraud games, and cryptographic watermarks.",
+          tags: ["SoK / Survey", "Verifiable Compute", "zkML", "ICBC '27"]
         },
         {
           title: "Gen Z Housing Demographics",
-          meta: "2026 · NSF IUSE Scholars Academy · Great Minds in STEM '26",
-          desc: "Corrected a county/state aggregation mismatch as sole student author; presented the empirical county-level association at GMiS without asserting causal overreach.",
-          tags: ["NSF IUSE", "Data Analytics", "Python", "GMiS '26"]
+          meta: "Summer – Sep. 2026 · NSF IUSE Scholars Academy · Great Minds in STEM '26",
+          desc: "Corrected a county/state aggregation mismatch as sole student author; presented the weak county-level association at Great Minds in STEM without inferring causation.",
+          tags: ["Sole Student Author", "NSF IUSE", "Data Analytics", "GMiS '26"]
         },
         {
           title: "Debate Coach LLM Evaluation",
-          meta: "Feb. – Apr. 2026 · CRA UR2PhD",
-          desc: "Helped fine-tune and benchmark adversarial LLM debate agents with teammates. Audited citation reliability, conducted participant interviews, and presented at the CRA UR2PhD showcase.",
-          tags: ["CRA UR2PhD", "LLM-as-Judge", "Node.js", "Citation Auditing"]
+          link: "https://github.com/ponzek/DebateCoach",
+          meta: "Feb. – Apr. 2026 · CRA UR2PhD · JavaScript, Node.js, OpenAI API",
+          desc: "Helped fine-tune and evaluate LLM debate coaches with two teammates; audited citation reliability with AI assistance, contributed participant interviews, and presented at the CRA UR2PhD showcase.",
+          tags: ["CRA UR2PhD", "LLM Evaluation", "Node.js", "Citation Auditing"]
+        },
+        {
+          title: "Adaptive Learning with LLMs",
+          meta: "2025 · NSF IUSE Scholars Academy · Great Minds in STEM '25",
+          desc: "Prepared and checked synthetic tutoring dialogues with Node.js and monitored fine-tuning jobs; presented qualitative response comparisons as first author at Great Minds in STEM.",
+          tags: ["First Author", "NSF IUSE", "Node.js", "Fine-Tuning"]
         }
       ]
     },
     security: {
-      title: "Cybersecurity & Incident Research",
+      title: "Cybersecurity & Infrastructure",
       cards: [
         {
-          title: "Non-Profit Cyber Incident Repository",
-          meta: "May 2026 – Present · Kean Center for Cybersecurity",
-          desc: "Investigated nonprofit cyber incidents through OSINT, classifying incident reports by CIA-triad impact, CISA critical sector, and TAG Cyber taxonomy.",
-          tags: ["OSINT", "Incident Analysis", "CISA Taxonomy", "Threat Intel"]
+          title: "C.Y.B.E.R. Talk Radio Show (WKNJ 90.3 FM)",
+          link: "https://www.kean.edu/academics/college-business-and-public-management/center-cybersecurity-5",
+          meta: "Nov. 2, 2026 · Kean Center for Cybersecurity · On-Air Panelist",
+          desc: "Spoke live on WKNJ 90.3 FM alongside Paris, Sherwin & Farbah covering fake toll text smishing (7726 SPAM & ReportFraud.FTC.gov), public Wi-Fi & HTTPS padlock myths, password managers vs. credential reuse, and exploring careers across forensics, nonprofit incident response & AI security.",
+          tags: ["WKNJ 90.3 FM", "Smishing Defense", "Public Wi-Fi Safety", "Cyber Outreach"]
         },
         {
-          title: "Mobile ACDC Infrastructure",
-          meta: "Kean Center for Cybersecurity",
-          desc: "Designed solar-power and rack-energy monitoring for Mobile ACDC, the Center's portable teaching data center, and built an Arduino/ESP8266 IoT demonstration lab.",
-          tags: ["IoT Security", "Arduino/ESP8266", "Hardware", "Monitoring"]
+          title: "Fall Cybersecurity Research Intern",
+          meta: "Sep. 2026 – Present · Kean Center for Cybersecurity (Advisor: Stanley Mierzwa)",
+          desc: "Investigate nonprofit cyber incidents through OSINT for the Non-Profit Cyber Incident Repository, classifying reports by CIA-triad impact, CISA sector, and TAG Cyber taxonomy.",
+          tags: ["OSINT", "Incident Analysis", "CISA Taxonomy", "CIA Triad"]
         },
         {
-          title: "STEaM Cyber Instruction",
-          meta: "Port Authority of NY/NJ STEaM Camp",
-          desc: "Configured 30 classroom laptops and taught 12 lessons covering cryptography, programming, and network addressing to 60 high school students.",
-          tags: ["Teaching", "Cryptography", "Network Security"]
+          title: "Mobile ACDC & IoT Security Lab",
+          meta: "Sep. 2026 – Present · Kean Center for Cybersecurity · Union, NJ",
+          desc: "Design solar-power and rack-energy monitoring for Mobile ACDC, the Center's portable teaching data center, and built an Arduino/ESP8266 smart-home IoT lab.",
+          tags: ["Mobile ACDC", "Arduino/ESP8266", "Energy Monitoring", "IoT"]
+        },
+        {
+          title: "Summer WELL Cybersecurity Intern & STEaM Camp",
+          meta: "May – Aug. 2026 · Union, NJ / Wenzhou & Beijing, China",
+          desc: "Configured 30 classroom laptops and taught cryptography, programming, and IP addressing across 12 lessons at the Port Authority of NY/NJ STEaM Camp, reaching 60 high school students.",
+          tags: ["Cryptography", "STEaM Camp", "WELL Program", "Young Envoys"]
         }
       ]
     },
     experience: {
-      title: "Writing, Experience & Leadership",
+      title: "Writing, Leadership & Mentorship",
       cards: [
         {
+          title: "On-Air Panelist · Kean C.Y.B.E.R. Talk Show",
+          link: "https://www.kean.edu/academics/college-business-and-public-management/center-cybersecurity-5",
+          meta: "Nov. 2, 2026 · WKNJ 90.3 FM · Kean Center for Cybersecurity",
+          desc: "Translated actionable cybersecurity practices for radio listeners with co-panelists Paris, Sherwin & Farbah — breaking down toll-text smishing, public Wi-Fi encryption myths, password hygiene, and how students can test-drive cyber roles through hands-on labs.",
+          tags: ["C.Y.B.E.R. Talk", "WKNJ 90.3 FM", "Science Communication"]
+        },
+        {
           title: "Secretary · Women in CyberSecurity (WiCyS)",
+          link: "https://kean.campuslabs.com/engage/event/12870047",
           meta: "Sep. 2026 – Present · Kean University Chapter",
-          desc: "Coordinated guest-speaker scheduling and campus planning for PHD4FREE!, developing the graduate research funding symposium. Presented pathways into paid research and fellowships to 15 attendees.",
-          tags: ["Leadership", "Event Planning", "WiCyS"]
+          desc: "Coordinated guest-speaker scheduling and campus event planning for PHD4FREE!, developing the research and graduate-funding event from Aug.–Oct. 2026 and presenting to 15 attendees alongside Notre Dame PhD student Demetrius Hernandez.",
+          tags: ["WiCyS Secretary", "PHD4FREE!", "Graduate Fellowships"]
         },
         {
           title: "Peer Mentor / Code Samurai",
-          meta: "Sep. 2026 – Present & Jan. – May 2025 · Kean Dept. of CS",
-          desc: "Guide undergraduate students through Python, SQL, data structures, and debugging in one-on-one sessions. Volunteered in Spring 2025 and returned as a paid mentor in Fall 2026.",
-          tags: ["Mentorship", "Python", "Data Structures", "SQL"]
+          link: "https://yoda.kean.edu/~samurai/",
+          meta: "Sep. 2026 – Present (Paid) & Jan. – May 2025 (Volunteer) · Kean Dept. of CS",
+          desc: "Guide students through Python, SQL, data structures, and debugging in one-on-one sessions so they can identify and explain their next steps.",
+          tags: ["Code Samurai", "Python", "SQL", "Data Structures"]
         },
         {
           title: "International Youth Delegate · IFWY",
-          meta: "Sep. – Oct. 2025 · Cornell Tech & Seoul, South Korea",
-          desc: "Spearheaded SelectSolar proposal to deliver low-cost solar solutions to non-profits. Selected for Cornell Tech fellowship, then voted 1 of 25 North American delegates for the IFWY Final Conference in Seoul.",
-          tags: ["Fellowship", "Sustainability", "Global Policy"]
+          meta: "Sep. – Oct. 2025 · Cornell Tech (NYC) & Seoul, South Korea",
+          desc: "Spearheaded project design and scope for SelectSolar to divert solar panels from landfills and power non-profit institutions. Selected for a fully funded Cornell Tech fellowship, then voted 1 of 25 North American delegates for the IFWY Final Conference in Seoul.",
+          tags: ["IFWY Seoul", "Cornell Tech Fellow", "SelectSolar"]
         }
       ]
     }
@@ -541,23 +835,44 @@
     activeTab = tab;
     tabButtons.forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
     drawerTitle.textContent = data.title;
-    drawerBody.innerHTML = `
-      <div class="card-grid">
-        ${data.cards.map(c => `
-          <div class="info-card">
-            <div>
-              <h3>${c.title}</h3>
-              <div class="info-meta">${c.meta}</div>
-              <div class="info-desc">${c.desc}</div>
+    if (data.isTimeline) {
+      drawerBody.innerHTML = `
+        <div class="timeline-list">
+          ${timelineEvents.map(ev => `
+            <div class="tl-item" style="--tl-c: ${ev.color}">
+              <span class="tl-dot"></span>
+              <div class="tl-top">
+                <span class="tl-date">${ev.date}</span>
+                <span class="tl-cat">${ev.cat}</span>
+              </div>
+              <h3 class="tl-title">${ev.title}</h3>
+              <div class="tl-org">${ev.org}</div>
+              <p class="tl-desc">${ev.desc}</p>
             </div>
-            <div class="tag-row">
-              ${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+          `).join("")}
+        </div>
+      `;
+    } else {
+      drawerBody.innerHTML = `
+        <div class="card-grid">
+          ${data.cards.map(c => `
+            <div class="info-card">
+              <div>
+                <h3>${c.link ? `<a href="${c.link}" target="_blank" rel="noreferrer">${c.title} ↗</a>` : c.title}</h3>
+                <div class="info-meta">${c.meta}</div>
+                <div class="info-desc">${c.desc}</div>
+              </div>
+              <div class="tag-row">
+                ${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}
+              </div>
             </div>
-          </div>
-        `).join("")}
-      </div>
-    `;
+          `).join("")}
+        </div>
+      `;
+    }
     drawer.classList.add("open");
+    // Elaborate on the selected tab inside the 3D Blender Chat Bubble!
+    window.__mascot?.showTabTopic?.(tab);
     drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
@@ -565,6 +880,7 @@
     activeTab = null;
     drawer.classList.remove("open");
     tabButtons.forEach((b) => b.classList.remove("active"));
+    window.__mascot?.clearTabTopic?.();
   }
 })();
 </script>
