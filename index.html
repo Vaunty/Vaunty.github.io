@@ -376,6 +376,31 @@
   }
 
   /* ---------- Chronological Experience Timeline ---------- */
+  .tl-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .tl-filter-btn {
+    background: #161b22;
+    color: #c9d1d9;
+    border: 1px solid var(--border-dark);
+    border-radius: 999px;
+    padding: 0.36rem 0.9rem;
+    font: 600 0.78rem var(--font-mono);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .tl-filter-btn:hover {
+    border-color: #3fb950;
+    color: #ffffff;
+  }
+  .tl-filter-btn.active {
+    background: rgba(63, 185, 80, 0.16);
+    border-color: #3fb950;
+    color: #3fb950;
+  }
   .timeline-list {
     position: relative;
     margin: 0.5rem 0 0.5rem 0.75rem;
@@ -479,6 +504,17 @@
     .tab-btn, .tab-link { padding: .85rem 1rem; }
     .tab-drawer { padding: 1.5rem 1.25rem; }
   }
+  @media (max-width: 600px) {
+    :root { --hero-h: min(78vh, 640px); }
+    .hint { font-size: .74rem; right: 1.25rem; }
+    .hint-click { display: none; }
+    .ask-bar-wrap { bottom: 3.6rem; }
+    .ask-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .ask-chips::-webkit-scrollbar { display: none; }
+    .ask-chip { flex: 0 0 auto; }
+    .mascot-poster { opacity: 0; }
+    .mascot-fallback .mascot-poster { opacity: 1; }
+  }
 </style>
 </head>
 <body>
@@ -489,11 +525,11 @@
     </header>
 
     <!-- Sleek floating hero card with 3D Blender Chat Bubble + 3D Mascot + Terminal Ask Bar -->
-    <section class="hero-card" id="hero" data-mascot data-mascot-glb="assets/mascot.glb">
+    <section class="hero-card" id="hero" data-mascot data-mascot-glb="assets/mascot.glb" data-chat-proxy="">
       <span class="hint"><span class="prompt-caret">&gt;_</span> move your cursor<span class="hint-click"> · click box for a sip · click 3D bubble for next</span></span>
 
       <div class="mascot-stage">
-        <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's 3D mascot and 3D cartoon speech bubble: a green frog in red cat-eye visor glasses holding a Yoo-hoo chocolate drink with both hands" width="1600" height="1000" decoding="async" fetchpriority="high" />
+        <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's 3D mascot and 3D cartoon speech bubble: a green frog in red cat-eye visor glasses holding a Yoo-hoo chocolate drink with both hands" width="1600" height="793" decoding="async" fetchpriority="high" />
       </div>
 
       <!-- Sleek Terminal Chatbot Bar -->
@@ -504,18 +540,12 @@
             type="text"
             class="ask-input"
             id="mascotAskInput"
-            placeholder="type your question, or ask me anything..."
+            placeholder="type your question, or ask me anything..." maxlength="300"
             aria-label="Type your question, or ask Matthew anything"
           />
           <button type="submit" class="ask-submit">Ask ↵</button>
         </form>
-        <div class="ask-chips" aria-label="Suggested questions">
-          <button type="button" class="ask-chip" data-q="Tell me about the Kean C.Y.B.E.R. Talk radio show">🎙️ C.Y.B.E.R. Talk</button>
-          <button type="button" class="ask-chip" data-q="What did you say about fake toll texts?">📱 Fake Toll Texts</button>
-          <button type="button" class="ask-chip" data-q="Tell me about your HadAgent research">🔬 HadAgent</button>
-          <button type="button" class="ask-chip" data-q="Tell me about IFWY Seoul and SelectSolar">🌍 IFWY Seoul</button>
-          <button type="button" class="ask-chip" data-q="What are your technical skills?">💻 Tech Stack</button>
-        </div>
+        <div class="ask-chips" aria-label="Suggested questions"></div>
       </div>
 
       <button class="mascot-sound" type="button" aria-pressed="false" title="Toggle Roblox, Minecraft & Fortnite drinking sounds">
@@ -554,336 +584,6 @@
     </footer>
   </div>
 
-<script>
-(() => {
-  // ---------------- Terminal "Ask Me Anything" Chatbot Wiring ----------------
-  const askForm = document.getElementById("mascotAskForm");
-  const askInput = document.getElementById("mascotAskInput");
-  const askChips = document.querySelectorAll(".ask-chip");
-
-  askForm?.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const q = askInput.value.trim();
-    if (!q) return;
-    window.__mascot?.ask?.(q);
-    askInput.blur();
-  });
-
-  askChips.forEach((chip) => {
-    chip.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const q = chip.dataset.q || chip.textContent;
-      if (askInput) askInput.value = q;
-      window.__mascot?.ask?.(q);
-    });
-  });
-
-  // ---------------- Portfolio Sections & Chronological Timeline ----------------
-  const timelineEvents = [
-    {
-      date: "Nov. 2, 2026",
-      cat: "Public Outreach · Cyber Radio",
-      color: "#2dd4bf",
-      title: "On-Air Panelist · Kean C.Y.B.E.R. Talk Radio Show (WKNJ 90.3 FM)",
-      org: "Kean University Center for Cybersecurity · Panel with Paris, Sherwin & Farbah · Union, NJ",
-      desc: "Featured speaker on WKNJ 90.3 FM's C.Y.B.E.R. Talk broadcast. Led 4 on-air segments: spotting Fake Toll Text smishing scams (never replying STOP, forwarding to 7726 SPAM & ReportFraud.FTC.gov), navigating the cybersecurity umbrella from digital forensics and nonprofit incident investigation to AI security research, staying safe on public Wi-Fi (why HTTPS encrypts traffic but doesn't guarantee a site is legitimate), and overcoming password reuse & tracking cookies with password managers."
-    },
-    {
-      date: "Sep. 2026 – Present",
-      cat: "Research · AI Security",
-      color: "#f85149",
-      title: "Independent Study: Red-Teaming HadAgent & Verifiable LLM Inference SoK",
-      org: "Kean University · Advisor: Dr. Boyang Li · Union, NJ",
-      desc: "Investigating whether verifier acceptance in proof-of-inference protocols establishes genuine model execution. Identified a local score-validation gap in a copied HadAgent prototype (where the original validator accepted 70/78 below-threshold synthetic submissions vs. 0/78 after repair), responsibly disclosed findings to the author, and co-authoring a Systematization of Knowledge (SoK) survey targeting ICBC 2027."
-    },
-    {
-      date: "Sep. 2026 – Present",
-      cat: "Experience · Cybersecurity",
-      color: "#58a6ff",
-      title: "Cybersecurity Research Intern (Fall)",
-      org: "Kean University Center for Cybersecurity · Advisor: Stanley Mierzwa · Union, NJ",
-      desc: "Investigate nonprofit cyber incidents through OSINT for the Non-Profit Cyber Incident Repository (classifying by CIA-triad impact, CISA sector, and TAG Cyber taxonomy), design solar-power and rack-energy monitoring for the Mobile ACDC teaching data center, and built an Arduino/ESP8266 IoT smart-home lab."
-    },
-    {
-      date: "Sep. 2026 – Present",
-      cat: "Project · Security Engineering",
-      color: "#3fb950",
-      title: "Co-Developer · KEAN CTF 2027",
-      org: "Kean University · Python, Docker, CTFd, Cloudflare Tunnel, GitHub Actions",
-      desc: "Co-developing Docker-isolated CTF challenges and solve scripts with two teammates and AI assistance, including defenses designed to resist blind AI solvers. Automated challenge validation in GitHub Actions and fixed an unintended flag leak and broken hints through a player audit."
-    },
-    {
-      date: "Sep. 2026 – Present",
-      cat: "Leadership · Campus Community",
-      color: "#d29922",
-      title: "Secretary · Women in CyberSecurity (WiCyS)",
-      org: "Kean University Chapter · Union, NJ",
-      desc: "Coordinated guest-speaker scheduling and campus event planning for PHD4FREE! (developed Aug.–Oct. 2026). Presented pathways into undergraduate research, paid programs, and graduate fellowships alongside Notre Dame PhD student Demetrius Hernandez to 15 attendees."
-    },
-    {
-      date: "Sep. 2026 – Present & Jan. – May 2025",
-      cat: "Teaching & Mentorship",
-      color: "#bc8cff",
-      title: "Peer Mentor / Code Samurai",
-      org: "Kean University Department of Computer Science & Technology · Union, NJ",
-      desc: "Guide undergraduate students one-on-one through Python, SQL, data structures, and debugging. Volunteered in Spring 2025, paused to focus on research and projects, and returned as a paid mentor in Fall 2026."
-    },
-    {
-      date: "Summer – Sep. 2026",
-      cat: "Research · Data Analytics",
-      color: "#f85149",
-      title: "Sole Student Author · Gen Z Housing Demographics",
-      org: "NSF IUSE Scholars Academy · Presented at Great Minds in STEM (GMiS) '26",
-      desc: "Corrected a county/state aggregation mismatch in housing and demographic datasets as sole student author and presented the empirical county-level association at the September 2026 GMiS conference without inferring causal overreach."
-    },
-    {
-      date: "June 2026",
-      cat: "Project · LLM Security",
-      color: "#3fb950",
-      title: "Creator · LLM Red-Team Harness",
-      org: "Open Source (Vaunty/legacy-red-team-harness) · Python, SQLite, Ollama",
-      desc: "Built an AI-assisted adversarial testing pipeline for prompt-injection, jailbreak, and data-leak evaluations against local and hosted LLMs, preserving model-judge verdicts and transcripts in SQLite and JSONL."
-    },
-    {
-      date: "May – Aug. 2026",
-      cat: "Internship · Cyber Education & Global",
-      color: "#58a6ff",
-      title: "Summer WELL Cybersecurity Intern",
-      org: "Kean University Center for Cybersecurity · Union, NJ / Wenzhou & Beijing, China",
-      desc: "Configured 30 classroom laptops and taught 12 lessons covering cryptography, programming, and IP addressing to 60 high school students at the Port Authority of NY/NJ STEaM Camp; participated in international study in Wenzhou and Beijing supported by the Young Envoys Scholarship."
-    },
-    {
-      date: "Feb. – Apr. 2026",
-      cat: "Research · LLM Evaluation",
-      color: "#f85149",
-      title: "Undergraduate Researcher · Debate Coach LLM Evaluation",
-      org: "CRA UR2PhD · JavaScript, Node.js, OpenAI API",
-      desc: "Helped fine-tune and evaluate LLM debate coaches with two teammates; audited citation reliability with AI assistance, conducted participant interviews, and presented findings at the CRA UR2PhD research showcase."
-    },
-    {
-      date: "Sep. – Oct. 2025",
-      cat: "Fellowship · International Policy",
-      color: "#2dd4bf",
-      title: "International Youth Delegate & Cornell Tech Fellow",
-      org: "International Forum \"We, the Youth\" (IFWY) · New York, NY & Seoul, South Korea",
-      desc: "Spearheaded project design and scope for SelectSolar to divert solar panels from landfills and deliver low-cost clean energy to educational and non-profit institutions. Selected for a fully funded fellowship at Cornell Tech, then voted 1 of 25 North American delegates to the IFWY Final Conference in Seoul."
-    },
-    {
-      date: "2025",
-      cat: "Research · AI in Education",
-      color: "#f85149",
-      title: "First Author · Adaptive Learning with LLMs",
-      org: "NSF IUSE Scholars Academy · Presented at Great Minds in STEM (GMiS) '25",
-      desc: "Prepared and checked synthetic tutoring dialogues with Node.js, monitored fine-tuning jobs, and presented qualitative response comparisons as first author at Great Minds in STEM."
-    }
-  ];
-
-  const content = {
-    timeline: {
-      title: "Experience & Research Timeline (2025 – Present)",
-      isTimeline: true
-    },
-    projects: {
-      title: "Projects & Engineering",
-      cards: [
-        {
-          title: "KEAN CTF 2027",
-          meta: "Sep. 2026 – Present · Python, Docker, CTFd, Cloudflare Tunnel, GitHub Actions",
-          desc: "Co-develop Docker-isolated CTF challenges and solve scripts with AI assistance and two teammates, including defenses intended to resist blind AI solvers. Automated challenge validation in GitHub Actions and fixed an unintended flag leak and broken hints through a player audit.",
-          tags: ["Docker", "CTFd", "Cloudflare Tunnel", "GitHub Actions"]
-        },
-        {
-          title: "LLM Red-Team Harness",
-          link: "https://github.com/Vaunty/legacy-red-team-harness",
-          meta: "June 2026 · Python, SQLite, Ollama",
-          desc: "Built an AI-assisted pipeline for prompt-injection, jailbreak, and data-leak tests, saving model-judge verdicts and transcripts in SQLite and JSONL with offline reproducible tests.",
-          tags: ["Adversarial Testing", "Ollama", "SQLite", "Python"]
-        },
-        {
-          title: "Real-Time 3D Mascot & Blender Chat Bubble",
-          meta: "Nov. 2026 · three.js, WebGL, Blender 5.2 Python",
-          desc: "Interactive 3D vinyl-toy frog mascot & 3D Blender cartoon speech bubble (`ChatBubbleFrame` + `ChatBubbleFace`) with live CanvasTexture Q&A chatbot, dual-arm Yoo-hoo rig, rosy cheek blush shader, and Roblox/Minecraft/Fortnite audio.",
-          tags: ["three.js", "Blender 5.2", "3D Chat Bubble", "Custom Shaders"]
-        }
-      ]
-    },
-    research: {
-      title: "Research & Presentations",
-      cards: [
-        {
-          title: "HadAgent Verification Study",
-          link: "https://github.com/Vaunty/hadagent-verification-study",
-          meta: "Sep. 2026 – Present · Advisor: Dr. Boyang Li",
-          desc: "Investigated whether verifier acceptance establishes model execution by directing and interpreting AI-designed, AI-run tests of a copied HadAgent verifier. Identified a local score-validation gap (70/78 below-threshold acceptance vs. 0/78 after repair) and disclosed findings to the authors.",
-          tags: ["Proof-of-Inference", "LLM Verification", "Python", "pytest"]
-        },
-        {
-          title: "Survey on Verifiable LLM Inference (SoK)",
-          meta: "Fall 2026 – Present · Advisor: Dr. Boyang Li (Target: ICBC '27)",
-          desc: "Systematization of Knowledge (SoK) examining verifiable inference mechanisms across decentralized AI networks — comparing zkML proofs, TEEs, optimistic fraud games, and cryptographic watermarks.",
-          tags: ["SoK / Survey", "Verifiable Compute", "zkML", "ICBC '27"]
-        },
-        {
-          title: "Gen Z Housing Demographics",
-          meta: "Summer – Sep. 2026 · NSF IUSE Scholars Academy · Great Minds in STEM '26",
-          desc: "Corrected a county/state aggregation mismatch as sole student author; presented the weak county-level association at Great Minds in STEM without inferring causation.",
-          tags: ["Sole Student Author", "NSF IUSE", "Data Analytics", "GMiS '26"]
-        },
-        {
-          title: "Debate Coach LLM Evaluation",
-          link: "https://github.com/ponzek/DebateCoach",
-          meta: "Feb. – Apr. 2026 · CRA UR2PhD · JavaScript, Node.js, OpenAI API",
-          desc: "Helped fine-tune and evaluate LLM debate coaches with two teammates; audited citation reliability with AI assistance, contributed participant interviews, and presented at the CRA UR2PhD showcase.",
-          tags: ["CRA UR2PhD", "LLM Evaluation", "Node.js", "Citation Auditing"]
-        },
-        {
-          title: "Adaptive Learning with LLMs",
-          meta: "2025 · NSF IUSE Scholars Academy · Great Minds in STEM '25",
-          desc: "Prepared and checked synthetic tutoring dialogues with Node.js and monitored fine-tuning jobs; presented qualitative response comparisons as first author at Great Minds in STEM.",
-          tags: ["First Author", "NSF IUSE", "Node.js", "Fine-Tuning"]
-        }
-      ]
-    },
-    security: {
-      title: "Cybersecurity & Infrastructure",
-      cards: [
-        {
-          title: "C.Y.B.E.R. Talk Radio Show (WKNJ 90.3 FM)",
-          link: "https://www.kean.edu/academics/college-business-and-public-management/center-cybersecurity-5",
-          meta: "Nov. 2, 2026 · Kean Center for Cybersecurity · On-Air Panelist",
-          desc: "Spoke live on WKNJ 90.3 FM alongside Paris, Sherwin & Farbah covering fake toll text smishing (7726 SPAM & ReportFraud.FTC.gov), public Wi-Fi & HTTPS padlock myths, password managers vs. credential reuse, and exploring careers across forensics, nonprofit incident response & AI security.",
-          tags: ["WKNJ 90.3 FM", "Smishing Defense", "Public Wi-Fi Safety", "Cyber Outreach"]
-        },
-        {
-          title: "Fall Cybersecurity Research Intern",
-          meta: "Sep. 2026 – Present · Kean Center for Cybersecurity (Advisor: Stanley Mierzwa)",
-          desc: "Investigate nonprofit cyber incidents through OSINT for the Non-Profit Cyber Incident Repository, classifying reports by CIA-triad impact, CISA sector, and TAG Cyber taxonomy.",
-          tags: ["OSINT", "Incident Analysis", "CISA Taxonomy", "CIA Triad"]
-        },
-        {
-          title: "Mobile ACDC & IoT Security Lab",
-          meta: "Sep. 2026 – Present · Kean Center for Cybersecurity · Union, NJ",
-          desc: "Design solar-power and rack-energy monitoring for Mobile ACDC, the Center's portable teaching data center, and built an Arduino/ESP8266 smart-home IoT lab.",
-          tags: ["Mobile ACDC", "Arduino/ESP8266", "Energy Monitoring", "IoT"]
-        },
-        {
-          title: "Summer WELL Cybersecurity Intern & STEaM Camp",
-          meta: "May – Aug. 2026 · Union, NJ / Wenzhou & Beijing, China",
-          desc: "Configured 30 classroom laptops and taught cryptography, programming, and IP addressing across 12 lessons at the Port Authority of NY/NJ STEaM Camp, reaching 60 high school students.",
-          tags: ["Cryptography", "STEaM Camp", "WELL Program", "Young Envoys"]
-        }
-      ]
-    },
-    experience: {
-      title: "Writing, Leadership & Mentorship",
-      cards: [
-        {
-          title: "On-Air Panelist · Kean C.Y.B.E.R. Talk Show",
-          link: "https://www.kean.edu/academics/college-business-and-public-management/center-cybersecurity-5",
-          meta: "Nov. 2, 2026 · WKNJ 90.3 FM · Kean Center for Cybersecurity",
-          desc: "Translated actionable cybersecurity practices for radio listeners with co-panelists Paris, Sherwin & Farbah — breaking down toll-text smishing, public Wi-Fi encryption myths, password hygiene, and how students can test-drive cyber roles through hands-on labs.",
-          tags: ["C.Y.B.E.R. Talk", "WKNJ 90.3 FM", "Science Communication"]
-        },
-        {
-          title: "Secretary · Women in CyberSecurity (WiCyS)",
-          link: "https://kean.campuslabs.com/engage/event/12870047",
-          meta: "Sep. 2026 – Present · Kean University Chapter",
-          desc: "Coordinated guest-speaker scheduling and campus event planning for PHD4FREE!, developing the research and graduate-funding event from Aug.–Oct. 2026 and presenting to 15 attendees alongside Notre Dame PhD student Demetrius Hernandez.",
-          tags: ["WiCyS Secretary", "PHD4FREE!", "Graduate Fellowships"]
-        },
-        {
-          title: "Peer Mentor / Code Samurai",
-          link: "https://yoda.kean.edu/~samurai/",
-          meta: "Sep. 2026 – Present (Paid) & Jan. – May 2025 (Volunteer) · Kean Dept. of CS",
-          desc: "Guide students through Python, SQL, data structures, and debugging in one-on-one sessions so they can identify and explain their next steps.",
-          tags: ["Code Samurai", "Python", "SQL", "Data Structures"]
-        },
-        {
-          title: "International Youth Delegate · IFWY",
-          meta: "Sep. – Oct. 2025 · Cornell Tech (NYC) & Seoul, South Korea",
-          desc: "Spearheaded project design and scope for SelectSolar to divert solar panels from landfills and power non-profit institutions. Selected for a fully funded Cornell Tech fellowship, then voted 1 of 25 North American delegates for the IFWY Final Conference in Seoul.",
-          tags: ["IFWY Seoul", "Cornell Tech Fellow", "SelectSolar"]
-        }
-      ]
-    }
-  };
-
-  const drawer = document.getElementById("tabDrawer");
-  const drawerTitle = document.getElementById("drawerTitle");
-  const drawerBody = document.getElementById("drawerBody");
-  const drawerClose = document.getElementById("drawerClose");
-  const tabButtons = document.querySelectorAll(".tab-btn");
-
-  let activeTab = null;
-
-  tabButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const tab = btn.dataset.tab;
-      if (activeTab === tab) {
-        closeDrawer();
-        return;
-      }
-      openTab(tab);
-    });
-  });
-
-  drawerClose.addEventListener("click", closeDrawer);
-
-  function openTab(tab) {
-    const data = content[tab];
-    if (!data) return;
-    activeTab = tab;
-    tabButtons.forEach((b) => b.classList.toggle("active", b.dataset.tab === tab));
-    drawerTitle.textContent = data.title;
-    if (data.isTimeline) {
-      drawerBody.innerHTML = `
-        <div class="timeline-list">
-          ${timelineEvents.map(ev => `
-            <div class="tl-item" style="--tl-c: ${ev.color}">
-              <span class="tl-dot"></span>
-              <div class="tl-top">
-                <span class="tl-date">${ev.date}</span>
-                <span class="tl-cat">${ev.cat}</span>
-              </div>
-              <h3 class="tl-title">${ev.title}</h3>
-              <div class="tl-org">${ev.org}</div>
-              <p class="tl-desc">${ev.desc}</p>
-            </div>
-          `).join("")}
-        </div>
-      `;
-    } else {
-      drawerBody.innerHTML = `
-        <div class="card-grid">
-          ${data.cards.map(c => `
-            <div class="info-card">
-              <div>
-                <h3>${c.link ? `<a href="${c.link}" target="_blank" rel="noreferrer">${c.title} ↗</a>` : c.title}</h3>
-                <div class="info-meta">${c.meta}</div>
-                <div class="info-desc">${c.desc}</div>
-              </div>
-              <div class="tag-row">
-                ${c.tags.map(t => `<span class="tag">${t}</span>`).join("")}
-              </div>
-            </div>
-          `).join("")}
-        </div>
-      `;
-    }
-    drawer.classList.add("open");
-    // Elaborate on the selected tab inside the 3D Blender Chat Bubble!
-    window.__mascot?.showTabTopic?.(tab);
-    drawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }
-
-  function closeDrawer() {
-    activeTab = null;
-    drawer.classList.remove("open");
-    tabButtons.forEach((b) => b.classList.remove("active"));
-    window.__mascot?.clearTabTopic?.();
-  }
-})();
-</script>
 <script type="module" src="hero.js"></script>
 </body>
 </html>
