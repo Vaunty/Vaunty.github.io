@@ -51,9 +51,11 @@ Rate limiting is 30 requests/minute/IP; CORS allows the portfolio origin.
 
 Finals data requires visible Finals.ID credit and CC BY-NC-SA 4.0 attribution.
 The helper app still renews Embark access; the personal API key doesn't replace it.
-On 2026-11-06, the personal key form failed server validation for a missing
-`accessCode`, including a retry with that optional field explicitly empty.
-No key was created during those attempts.
+On 2026-11-06, personal-key creation initially failed server validation for a missing
+`accessCode`. Creating an empty owned team and submitting its valid code with the
+personal-key form resolved that bug. The Personal website key now exists; secure
+transfer to the Worker and an authenticated response check remain pending.
+See `FINALS_INTEGRATION_NOTES.md` for the investigation and exact scope.
 
 ## Build and deploy
 
