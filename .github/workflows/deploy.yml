@@ -37,6 +37,11 @@ jobs:
           test -f assets/poster.webp || (echo "Missing assets/poster.webp" && exit 1)
           test -f assets/Matthew_Ngoy_Resume_Industry.pdf || (echo "Missing Industry Resume PDF" && exit 1)
           test -f assets/Matthew_Ngoy_Resume_Research.pdf || (echo "Missing Research Resume PDF" && exit 1)
+          test -f assets/resumes/Matthew_Ngoy_Resume_Industry.pdf
+          test -f assets/resumes/Matthew_Ngoy_Research_Resume.pdf
+          test -f assets/resumes/Matthew_Ngoy_Resume_Industry-1.png
+          test -f assets/resumes/Matthew_Ngoy_Research_Resume-1.png
+          test -f assets/resumes/Matthew_Ngoy_Research_Resume-2.png
           echo "All portfolio assets verified successfully!"
 
   deploy:

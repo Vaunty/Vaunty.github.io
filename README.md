@@ -12,7 +12,9 @@ A high-performance personal portfolio website featuring a real-time 3D vinyl-toy
 - **True 3D Wrapped Visor:** Cat-eye sunglasses with curved temple wrap ($R = 1.30$), glossy white acetate frame, and vibrant red reflective lenses.
 - **GitHub Universe Visual Identity:** Sleek dark-mode aesthetic with an off-white floating hero card, vibrant mosaic pixel grid, and interactive audio toggle.
 - **On-Demand Portfolio Drawer:** Clean, uncluttered layout where projects, research papers, security audits, and experience only expand when tabs are selected.
-- **One-Click Resume Downloads:** Bundled verified PDF resumes for both Industry and Academic / Research applications.
+- **Inline Resume Viewers:** Separate Industry and Research tabs display the November 5, 2026 resumes on the page, with zoom, accessible text and explicit PDF download controls.
+- **Portfolio Guide:** Local, note-grounded answers with follow-up suggestions, persistent conversation text and links into relevant tabs. No live AI service is required.
+- **Responsive and Keyboard Accessible:** Wrapping navigation, mobile cards, keyboard tab controls and a working guide even without WebGL.
 - **Automated CI/CD Pipeline:** GitHub Actions workflow automatically verifies asset integrity, runs smoke checks, and deploys directly to GitHub Pages on every push to `main`.
 
 ---

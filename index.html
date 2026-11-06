@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>What's new with Matthew</title>
+<title>Matthew Ngoy · Projects, research & experience</title>
+<meta name="description" content="Matthew Ngoy’s portfolio: cybersecurity, AI evaluation, research, teaching and leadership. Read industry and research resumes on the page." />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐸</text></svg>" />
 <link rel="preload" href="assets/mascot.glb" as="fetch" type="model/gltf-binary" crossorigin />
 <style>
@@ -515,18 +516,85 @@
     .mascot-poster { opacity: 0; }
     .mascot-fallback .mascot-poster { opacity: 1; }
   }
+
+  [hidden] { display: none !important; }
+  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
+  :focus-visible { outline:3px solid #58a6ff; outline-offset:4px; }
+  button, select { min-height:44px; }
+  .ask-input { font-size:16px; }
+  .ask-submit { min-width:52px; }
+  .ask-chip { min-height:36px; }
+  .hint-mobile { display:none; }
+  @media(pointer:coarse) { .hint-desktop { display:none; } .hint-mobile { display:inline; } }
+  .guide-disclosure { color:#a7b2be; font-size:.82rem; margin:1rem .2rem; }
+  .guide-panel { border:1px solid #30363d; border-radius:16px; padding:1.4rem; background:#0d1117; }
+  .guide-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .guide-header h2 { font-size:1.05rem; margin:0; }
+  .guide-panel button, .guide-actions a { border:1px solid #46515f; border-radius:8px; padding:.55rem .85rem; background:#161b22; color:#e6edf3; font:inherit; cursor:pointer; text-decoration:none; }
+  #guideAnswers { max-height:480px; overflow:auto; overscroll-behavior:contain; }
+  .guide-answer { border-top:1px solid #30363d; margin-top:1rem; padding:1rem 0 .3rem; overflow-wrap:anywhere; }
+  .guide-question { color:#aab8c7; font-size:.85rem; }
+  .guide-answer h3 { margin:.4rem 0; font-size:1.15rem; }
+  .guide-answer p { max-width:78ch; }
+  .guide-actions, .guide-followups { display:flex; flex-wrap:wrap; gap:.5rem; margin:.8rem 0; }
+  .guide-actions button, .guide-actions a { background:#163721; border-color:#387b49; }
+  .guide-followups button { color:#b2c7da; font-size:.85rem; }
+  nav.tabs { flex-wrap:wrap; }
+  .tab-btn { flex:1 1 auto; padding:.85rem 1rem; }
+  .tab-drawer { scroll-margin-top:20px; }
+  .drawer-header { gap:1rem; align-items:center; }
+  .drawer-close { flex-shrink:0; }
+  .info-card, .tl-item { min-width:0; overflow-wrap:anywhere; }
+  .source-link { display:inline-block; color:#79bbff; text-underline-offset:4px; margin:.3rem 0 1rem; padding:.35rem 0; }
+  .resume-toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:.75rem 1.25rem; padding:.85rem; background:#161b22; border:1px solid #30363d; border-radius:10px; }
+  .resume-toolbar span { flex:1 1 200px; color:#b9c3ce; font-size:.85rem; }
+  .resume-toolbar label { display:flex; align-items:center; gap:.5rem; }
+  .resume-toolbar select { background:#0d1117; color:white; border:1px solid #536170; border-radius:6px; padding:0 .5rem; font:inherit; }
+  .download-btn { display:inline-flex; align-items:center; min-height:44px; padding:.6rem 1rem; background:#245a32; color:white; border:1px solid #4c9a5d; border-radius:7px; text-decoration:none; font-weight:600; }
+  .viewer-help { color:#b9c3ce; font-size:.85rem; }
+  .resume-scroll { max-height:80vh; max-height:80dvh; overflow:auto; border:1px solid #30363d; background:#252b32; overscroll-behavior:contain; }
+  .resume-pages { width:100%; }
+  .resume-pages figure { margin:0 0 1.25rem; }
+  .resume-pages figure:last-child { margin-bottom:0; }
+  .resume-pages img { display:block; width:100%; height:auto; background:white; }
+  .resume-pages figcaption { text-align:center; padding:.6rem; font-size:.8rem; color:#c5d0da; }
+  .resume-text { margin-top:1.25rem; }
+  .resume-text summary { cursor:pointer; padding:.8rem 0; color:#79bbff; }
+  .resume-transcript { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.7; }
+  @media(max-width:600px) {
+    .page-container { padding:1rem .8rem 2rem; }
+    .hero-card { height:570px; max-height:none; }
+    .ask-bar-wrap { left:.8rem; right:.8rem; bottom:4rem; }
+    .ask-prefix { display:none; }
+    .ask-chip { min-height:44px; }
+    .ask-form { padding-left:.65rem; }
+    .tab-btn { flex:1 1 42%; font-size:.87rem; }
+    .tab-drawer { padding:1rem .75rem; }
+    .drawer-title { font-size:1.25rem; }
+    .drawer-header { align-items:flex-start; }
+    .card-grid { grid-template-columns:minmax(0,1fr); }
+    .timeline-list { padding-left:1rem; margin-left:.4rem; }
+    .tl-dot { left:-1.48rem; }
+    .tl-item { padding:.85rem; }
+    .guide-panel { padding:1rem; }
+    .resume-toolbar { padding:.65rem; gap:.65rem; }
+    .resume-toolbar span { flex-basis:100%; }
+    .resume-toolbar .download-btn { flex:1; justify-content:center; }
+    footer { margin-top:2rem; overflow-wrap:anywhere; }
+  }
+  @media(prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; } }
 </style>
 </head>
 <body>
   <div class="page-container">
     <header>
       <h1>What's new with<br /><span class="name">Matthew</span></h1>
-      <p class="subtitle">Catch up on the projects, research and experiments I've been shipping.</p>
+      <p class="subtitle">Computer science senior at Kean. I build, test and explain systems—with a focus on cybersecurity and AI.</p>
     </header>
 
     <!-- Sleek floating hero card with 3D Blender Chat Bubble + 3D Mascot + Terminal Ask Bar -->
     <section class="hero-card" id="hero" data-mascot data-mascot-glb="assets/mascot.glb" data-chat-proxy="">
-      <span class="hint"><span class="prompt-caret">&gt;_</span> move your cursor<span class="hint-click"> · click box for a sip · click 3D bubble for next</span></span>
+      <span class="hint"><span class="prompt-caret">&gt;_</span> <span class="hint-desktop">move your cursor</span><span class="hint-mobile">tap the drink for a sip</span><span class="hint-click"> · click box for a sip · click 3D bubble for next</span></span>
 
       <div class="mascot-stage">
         <img class="mascot-poster" src="assets/poster.webp" alt="Matthew's 3D mascot and 3D cartoon speech bubble: a green frog in red cat-eye visor glasses holding a Yoo-hoo chocolate drink with both hands" width="1600" height="793" decoding="async" fetchpriority="high" />
@@ -540,8 +608,8 @@
             type="text"
             class="ask-input"
             id="mascotAskInput"
-            placeholder="type your question, or ask me anything..." maxlength="300"
-            aria-label="Type your question, or ask Matthew anything"
+            placeholder="Ask about my work or resumes…" maxlength="300"
+            aria-label="Ask the portfolio guide about Matthew’s work" aria-describedby="guideDisclosure"
           />
           <button type="submit" class="ask-submit">Ask ↵</button>
         </form>
@@ -557,20 +625,27 @@
       </button>
     </section>
 
-    <!-- Sleek nav tabs including the Timeline tab -->
-    <nav class="tabs" aria-label="Portfolio Sections">
+    <p class="guide-disclosure" id="guideDisclosure">🐸 Portfolio guide · Answers from my written notes. No live AI service.</p>
+    <section class="guide-panel" id="guidePanel" aria-label="Portfolio conversation" hidden>
+      <div class="guide-header"><h2>Ask Matthew’s portfolio</h2><button type="button" id="clearGuide">Clear conversation</button></div>
+      <div id="guideAnswers"></div>
+    </section>
+    <div id="guideStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+    <!-- Portfolio navigation -->
+    <nav class="tabs" role="tablist" aria-label="Portfolio sections">
       <button type="button" class="tab-btn" data-tab="timeline" style="--c: var(--teal)">Timeline</button>
       <button type="button" class="tab-btn" data-tab="projects" style="--c: var(--green)">Projects</button>
       <button type="button" class="tab-btn" data-tab="research" style="--c: var(--red)">Research</button>
       <button type="button" class="tab-btn" data-tab="security" style="--c: var(--blue)">Security</button>
-      <button type="button" class="tab-btn" data-tab="experience" style="--c: var(--yellow)">Writing &amp; Leadership</button>
-      <a href="assets/Matthew_Ngoy_Resume_Industry.pdf" target="_blank" download class="tab-link" style="--c: var(--violet)">Resume (PDF) ↗</a>
-      <div class="tab-spacer"></div>
-      <div class="scroll-indicator"><span>Click a tab to explore</span> ▾</div>
+      <button type="button" class="tab-btn" data-tab="experience" style="--c: var(--yellow)">Leadership</button>
+      <button type="button" class="tab-btn" data-tab="industry" style="--c: var(--violet)">Industry resume</button>
+      <button type="button" class="tab-btn" data-tab="research_resume" style="--c: var(--teal)">Research resume</button>
+
+
     </nav>
 
     <!-- Interactive tab drawer -->
-    <div class="tab-drawer" id="tabDrawer" role="region" aria-live="polite">
+    <div class="tab-drawer" id="tabDrawer" role="tabpanel" tabindex="-1" hidden>
       <div class="drawer-header">
         <h2 class="drawer-title" id="drawerTitle">Timeline</h2>
         <button type="button" class="drawer-close" id="drawerClose" aria-label="Close panel">✕ Close</button>
@@ -580,7 +655,7 @@
 
     <footer>
       <div>Matthew Ngoy · Kean University B.S. CS (Cybersecurity) '27 · <a href="mailto:ngoym@kean.edu">ngoym@kean.edu</a></div>
-      <div>Built with Blender 5.2, Three.js &amp; WebGL · <a href="https://github.com/Vaunty" target="_blank" rel="noreferrer">GitHub (@Vaunty)</a> · <a href="https://www.linkedin.com/in/matthewngoy/" target="_blank" rel="noreferrer">LinkedIn</a></div>
+      <div>Built with AI assistance, Blender &amp; Three.js · <a href="https://github.com/Vaunty" target="_blank" rel="noreferrer">GitHub (@Vaunty)</a> · <a href="https://www.linkedin.com/in/matthewngoy/" target="_blank" rel="noreferrer">LinkedIn</a></div>
     </footer>
   </div>
 
