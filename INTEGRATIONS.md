@@ -7,7 +7,9 @@ No credentials belong in `src`, `index.html`, `hero.js`, or GitHub Pages assets.
 
 - Backend: `https://matthew-portfolio-activity.matthew-portfolio.workers.dev/v1/activity`
 - Finals account: `Girbaud#8191`.
-- Steam ID: awaiting the owner's profile URL.
+- Steam ID: `76561198145578413`, resolved from the owner's supplied profile
+  `https://steamcommunity.com/id/TheBadAzzMatt/`. Profile visibility is public;
+  game-details access still needs verification with the API key.
 - Spotify: authorization required. Only explicitly public playlists are returned.
 - API credentials: not installed yet. The UI distinguishes disconnected, private,
   unavailable, and empty data instead of inventing statistics.

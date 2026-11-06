@@ -9,7 +9,7 @@
   "vars": {
     "ALLOWED_ORIGIN": "https://vaunty.github.io",
     "FINALS_USERNAME": "Girbaud#8191",
-    "STEAM_ID": ""
+    "STEAM_ID": "76561198145578413"
   },
   "ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }]
 }
