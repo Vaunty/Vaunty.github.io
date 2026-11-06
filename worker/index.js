@@ -110,8 +110,9 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const origin = request.headers.get('Origin');
-    const headers = { 'Access-Control-Allow-Origin': env.ALLOWED_ORIGIN, 'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff' };
-    if (origin && origin !== env.ALLOWED_ORIGIN) return new Response('Forbidden', { status: 403 });
+    const allowedOrigins = [env.ALLOWED_ORIGIN, env.PREVIEW_ORIGIN].filter(Boolean);
+    const headers = { 'Access-Control-Allow-Origin': allowedOrigins.includes(origin) ? origin : env.ALLOWED_ORIGIN, 'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff' };
+    if (origin && !allowedOrigins.includes(origin)) return new Response('Forbidden', { status: 403 });
     if (url.pathname !== '/v1/activity') return new Response('Not found', { status: 404 });
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { ...headers, 'Access-Control-Allow-Methods': 'GET, OPTIONS' } });
     if (request.method !== 'GET') return new Response('Method not allowed', { status: 405, headers: { ...headers, Allow: 'GET, OPTIONS' } });

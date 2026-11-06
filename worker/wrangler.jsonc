@@ -8,6 +8,7 @@
   "observability": { "enabled": true, "head_sampling_rate": 0.1 },
   "vars": {
     "ALLOWED_ORIGIN": "https://vaunty.github.io",
+    "PREVIEW_ORIGIN": "https://matthew-portfolio-preview.matthew-portfolio.workers.dev",
     "FINALS_USERNAME": "Girbaud#8191",
     "STEAM_ID": "76561198145578413"
   },

@@ -5,3 +5,6 @@ node_modules/
 dist/
 worker-configuration.d.ts
 test-results/
+
+!.dev.vars.example
+!.env.example

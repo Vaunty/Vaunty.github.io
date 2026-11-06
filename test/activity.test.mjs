@@ -29,3 +29,11 @@ test('Public route rejects mutations, unrelated origins and unknown paths',async
  const env={ALLOWED_ORIGIN:'https://vaunty.github.io'};
  for(const [url,init,status] of [['https://test/v1/activity',{method:'POST'},405],['https://test/v1/activity',{headers:{Origin:'https://evil.test'}},403],['https://test/v1/me/privacy',{},404]])assert.equal((await worker.fetch(new Request(url,init),env,{})).status,status);
 });
+
+test('Production and preview preflights return the requesting allowed origin',async()=>{
+ const env={ALLOWED_ORIGIN:'https://vaunty.github.io',PREVIEW_ORIGIN:'https://preview.example'};
+ for(const origin of Object.values(env)) {
+  const response=await worker.fetch(new Request('https://test/v1/activity',{method:'OPTIONS',headers:{Origin:origin}}),env,{});
+  assert.equal(response.status,204);assert.equal(response.headers.get('Access-Control-Allow-Origin'),origin);assert.equal(response.headers.get('Vary'),'Origin');
+ }
+});

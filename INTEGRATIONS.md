@@ -63,5 +63,10 @@ See `FINALS_INTEGRATION_NOTES.md` for the investigation and exact scope.
 `npm run worker:deploy` deploys the backend separately. GitHub Pages publishes only
 `dist/`, excluding backend code, local tooling, and credentials.
 
+The separate live demo is https://matthew-portfolio-preview.matthew-portfolio.workers.dev.
+Run `npm run preview:deploy` to build and publish only `dist/` to that preview.
+The backend allows both the production and preview origins; credentials remain
+in the backend Worker. Preview deployment does not change GitHub Pages.
+
 The guide retains only its latest answer in an optional accessible dialog; normal
 questions update the 3D bubble without a transcript or automatic scrolling.
