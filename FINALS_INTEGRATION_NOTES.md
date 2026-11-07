@@ -12,7 +12,11 @@ valid code alongside the existing **personal** key form succeeded. The resulting
 **Personal website** key is shown as personal/active, not a team or service key.
 No other members were invited and no organization application was submitted.
 The key is displayed once in a readonly textarea; it was not copied into source,
-logs, or this document. Secure transfer to the Worker is the remaining step.
+logs, or this document. The original secret was no longer available, so a
+replacement was created through the same personal form and transferred via a
+private entry card into the encrypted Worker secret. Both career and weapons
+endpoints returned HTTP 200; the public backend now returns sanitized stats.
+The original unused key was revoked, leaving one active personal key.
 
 The empty team still exists; no background tracking task was created.
 

@@ -23,9 +23,9 @@ function finalsCard(data) {
   const blocks = data.modes.map(m => {
     const s=m.stats, kd=typeof s.kills==='number' && s.deaths>0 ? num(s.kills/s.deaths) : '—';
     const weapons=data.weapons.find(w=>w.mode===m.mode)?.items || [];
-    const pairs=[['Kills',s.kills],['Deaths',s.deaths],['Wins',s.wins],['Revives',s.revives]].filter(([,v])=>typeof v==='number').map(([k,v])=>[k,num(v)]);
+    const pairs=[['Kills',s.kills],['Deaths',s.deaths],['Rounds won',s.roundsWon],['Rounds played',s.roundsPlayed],['Revives',s.revivesDone]].filter(([,v])=>typeof v==='number').map(([k,v])=>[k,num(v)]);
     if (kd!=='—') pairs.push(['K/D',kd]);
-    return `<section class="activity-mode"><h4>${esc({ranked:'Ranked',casual:'Casual',worldTour:'World Tour'}[m.mode] || m.mode)}</h4>${pairs.length ? metrics(pairs) : '<p class="activity-note">Career totals are not available for this mode.</p>'}${weapons.length?`<ul class="activity-list">${weapons.slice(0,3).map(w=>`<li><strong>${esc(w.name)}</strong><span>${num(w.kills)} kills · ${num(w.damage)} damage</span></li>`).join('')}</ul>`:''}<p class="activity-note">Captured ${esc(stamp(m.capturedAt))}</p></section>`;
+    return `<section class="activity-mode"><h4>${esc({ranked:'Ranked',casual:'Casual',worldTour:'World Tour',total:'All modes'}[m.mode] || m.mode)}</h4>${pairs.length ? metrics(pairs) : '<p class="activity-note">Career totals are not available for this mode.</p>'}${weapons.length?`<ul class="activity-list">${weapons.slice(0,3).map(w=>`<li><strong>${esc(w.name)}</strong><span>${num(w.kills)} kills · ${num(w.damage)} damage</span></li>`).join('')}</ul>`:''}<p class="activity-note">Captured ${esc(stamp(m.capturedAt))}</p></section>`;
   }).join('');
   return (blocks || '<p class="activity-note">No stats recorded yet.</p>') + link(data.profileUrl,'Full Finals profile') + credit;
 }

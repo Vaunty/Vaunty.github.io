@@ -9,9 +9,12 @@ No credentials belong in `src`, `index.html`, `hero.js`, or GitHub Pages assets.
 - Finals account: `Girbaud#8191`.
 - Steam ID: `76561198145578413`, resolved from the owner's supplied profile
   `https://steamcommunity.com/id/TheBadAzzMatt/`. Profile visibility is public;
-  game-details access still needs verification with the API key.
+  game-details access verified through the deployed backend: 60 games returned
+  on 2026-11-06. The API key is installed as an encrypted Worker secret.
 - Spotify: authorization required. Only explicitly public playlists are returned.
-- API credentials: not installed yet. The UI distinguishes disconnected, private,
+- Finals replacement key is installed and authenticated career/weapon responses
+  are verified. The original unused key is revoked. Spotify is deferred by the owner.
+  The UI distinguishes disconnected, private,
   unavailable, and empty data instead of inventing statistics.
 
 ## Backend configuration
@@ -38,8 +41,10 @@ history, playback control, or private playlists.
 
 Steam returns selected game names, playtime and library totals. Finals returns
 an allowlist of career metrics and top weapon totals, keeping game modes separate.
-Verify the career field names against an authenticated response before declaring
-the integration live: the public OpenAPI spec leaves `stats` as an untyped object.
+Career field names were verified against an authenticated response: `kills`,
+`deaths`, `revivesDone`, `roundsWon`, and `roundsPlayed`. Rounds won are labelled
+explicitly; they are not presented as match wins. The untyped scorecards and
+playtime fields are excluded.
 No raw session tokens, teammates, private account data or editable privacy settings
 are exposed by the public Worker. Personal Finals keys are more privileged than
 this display needs; keep them server-side.
@@ -54,7 +59,8 @@ The helper app still renews Embark access; the personal API key doesn't replace 
 On 2026-11-06, personal-key creation initially failed server validation for a missing
 `accessCode`. Creating an empty owned team and submitting its valid code with the
 personal-key form resolved that bug. The Personal website key now exists; secure
-transfer to the Worker and an authenticated response check remain pending.
+transfer initially remained pending. A replacement key was installed and verified
+on 2026-11-06; the original key was revoked after successful authentication.
 See `FINALS_INTEGRATION_NOTES.md` for the investigation and exact scope.
 
 ## Build and deploy

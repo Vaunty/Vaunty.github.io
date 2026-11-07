@@ -4,7 +4,8 @@ const number = v => typeof v === 'number' && Number.isFinite(v) && v >= 0 ? v : 
 const text = (v, max = 160) => typeof v === 'string' ? v.slice(0, max) : '';
 
 async function jsonFetch(url, options = {}) {
-  const response = await fetch(url, { ...options, signal: AbortSignal.timeout(8000), redirect: 'error' });
+  // Workers supports manual redirects; the status check below rejects 3xx responses.
+  const response = await fetch(url, { ...options, signal: AbortSignal.timeout(8000), redirect: 'manual' });
   if (!response.ok) throw new Error(`upstream_${response.status}`);
   const reader = response.body.getReader();
   let size = 0; const chunks = [];
@@ -35,7 +36,7 @@ export function sanitizeSteam(owned, recent, steamId) {
 
 export function sanitizeFinals(career, weapons, username) {
   // Publish only these career metrics. Never return the raw personal-key payload.
-  const metrics = ['kills', 'deaths', 'assists', 'wins', 'losses', 'revives', 'matchesPlayed', 'roundsPlayed', 'playtime', 'cashouts'];
+  const metrics = ['kills', 'deaths', 'revivesDone', 'roundsWon', 'roundsPlayed'];
   return {
     profileUrl: `https://finals.id/player/${encodeURIComponent(username)}`,
     season: text(career.season || 'lifetime'),
@@ -91,15 +92,16 @@ async function spotify(env) {
 const providers = { steam, finals, spotify };
 
 export async function getProvider(name, request, env, ctx, cache) {
-  const key = new Request(`${new URL(request.url).origin}/cache/v1/${name}`);
+  const key = new Request(`${new URL(request.url).origin}/cache/v2/${name}`);
   const cached = await cache.match(key);
   if (cached) return cached.json();
   try {
     const result = { ...await providers[name](env), fetchedAt: new Date().toISOString() };
     if (result.status === 'ok') ctx.waitUntil(cache.put(key, Response.json(result, { headers: { 'Cache-Control': `public, max-age=${TTL}` } })));
     return result;
-  } catch {
+  } catch (error) {
     // Do not log upstream URLs (Steam puts its key in the query string) or payloads.
+    console.warn('Provider request failed', name, /^upstream_\d+$/.test(error?.message) ? error.message : 'request_error');
     const result = { status: 'unavailable' };
     ctx.waitUntil(cache.put(key, Response.json(result, { headers: { 'Cache-Control': 'public, max-age=60' } })));
     return result;

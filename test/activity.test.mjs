@@ -13,6 +13,11 @@ test('Finals allowlist removes hidden/session fields and preserves mode boundari
 test('Private Steam library is unavailable rather than fabricated zero hours',()=>{
  const data=sanitizeSteam({response:{}},{response:{}},'12345678901234567');assert.equal(data.visible,false);assert.equal(data.totalMinutes,null);assert.equal(data.gameCount,null);
 });
+
+test('Finals uses verified API fields without treating rounds won as match wins',()=>{
+ const result=sanitizeFinals({modes:[{mode:'casual',stats:{kills:36809,deaths:27604,revivesDone:8692,roundsWon:2603,roundsPlayed:5103,scorecards:{},timePlayed:2863640614}}]},{modes:[]},'Name#1234');
+ assert.deepEqual(result.modes[0].stats,{kills:36809,deaths:27604,revivesDone:8692,roundsWon:2603,roundsPlayed:5103});
+});
 test('Steam reports correct recent playtime and lifetime totals without leaking raw fields',()=>{
  const g={appid:123,name:'Game',playtime_forever:120,playtime_2weeks:30,private:'secret'};
  const data=sanitizeSteam({response:{game_count:1,games:[g]}},{response:{games:[g]}},'12345678901234567');assert.equal(data.totalMinutes,120);assert.equal(data.recent[0].recentMinutes,30);assert(!JSON.stringify(data).includes('secret'));
@@ -24,6 +29,18 @@ test('Upstream errors cannot leak credentials and failed requests are briefly ca
 });
 test('Cache hit performs no upstream request',async()=>{
  const data=await getProvider('steam',new Request('https://test/v1/activity'),{}, {},{match:async()=>Response.json({status:'ok',fetchedAt:'older'})});assert.equal(data.fetchedAt,'older');
+});
+
+test('Provider redirects are rejected without forwarding the Steam credential',async()=>{
+ const original=globalThis.fetch;const jobs=[];
+ globalThis.fetch=async(url,options)=>{
+  assert.equal(options.redirect,'manual');
+  return new Response(null,{status:302,headers:{Location:'https://untrusted.test'}});
+ };
+ try {
+  const data=await getProvider('steam',new Request('https://test/v1/activity'),{STEAM_API_KEY:'private-key',STEAM_ID:'12345678901234567'},{waitUntil:p=>jobs.push(p)},{match:async()=>null,put:async()=>{}});
+  await Promise.all(jobs);assert.deepEqual(data,{status:'unavailable'});
+ } finally {globalThis.fetch=original;}
 });
 test('Public route rejects mutations, unrelated origins and unknown paths',async()=>{
  const env={ALLOWED_ORIGIN:'https://vaunty.github.io'};
