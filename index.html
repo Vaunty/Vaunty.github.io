@@ -527,18 +527,37 @@
   .hint-mobile { display:none; }
   @media(pointer:coarse) { .hint-desktop { display:none; } .hint-mobile { display:inline; } }
   .guide-disclosure { color:#a7b2be; font-size:.82rem; margin:1rem .2rem; }
-  .guide-panel { border:1px solid #30363d; border-radius:16px; padding:1.4rem; background:#0d1117; }
-  .guide-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
-  .guide-header h2 { font-size:1.05rem; margin:0; }
-  .guide-panel button, .guide-actions a { border:1px solid #46515f; border-radius:8px; padding:.55rem .85rem; background:#161b22; color:#e6edf3; font:inherit; cursor:pointer; text-decoration:none; }
-  #guideAnswers { max-height:480px; overflow:auto; overscroll-behavior:contain; }
-  .guide-answer { border-top:1px solid #30363d; margin-top:1rem; padding:1rem 0 .3rem; overflow-wrap:anywhere; }
-  .guide-question { color:#aab8c7; font-size:.85rem; }
-  .guide-answer h3 { margin:.4rem 0; font-size:1.15rem; }
-  .guide-answer p { max-width:78ch; }
-  .guide-actions, .guide-followups { display:flex; flex-wrap:wrap; gap:.5rem; margin:.8rem 0; }
-  .guide-actions button, .guide-actions a { background:#163721; border-color:#387b49; }
-  .guide-followups button { color:#b2c7da; font-size:.85rem; }
+  .guide-tools { display:flex; justify-content:space-between; align-items:center; gap:.6rem; flex-wrap:wrap; margin:.6rem 0; }
+  .guide-tools .guide-disclosure { margin:0; }
+  .read-answer { color:#a7b2be; background:none; border:0; text-decoration:underline; text-underline-offset:4px; cursor:pointer; font:inherit; font-size:.8rem; }
+  .read-answer:disabled { opacity:.4; cursor:default; }
+  .answer-dialog { color:#e6edf3; background:#161b22; border:1px solid #46515f; border-radius:16px; width:min(580px,calc(100% - 2rem)); max-height:80dvh; overflow:auto; padding:1.5rem; }
+  .answer-dialog::backdrop { background:rgba(0,0,0,.65); }
+  .answer-dialog p { line-height:1.7; }
+  .guide-actions { display:flex; flex-wrap:wrap; gap:.6rem; }
+  .guide-actions button,.guide-actions a,.activity-button,.answer-close { background:#163721; border:1px solid #387b49; color:#e6edf3; padding:.6rem .9rem; border-radius:8px; font:inherit; cursor:pointer; }
+  .answer-close { display:block; margin-left:auto; }
+  .activity-intro { color:#aab8c7; margin:0 0 1.5rem; }
+  .activity-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1.2rem; }
+  .activity-card { min-width:0; border:1px solid #30363d; border-radius:14px; background:#0d1117; padding:1.25rem; }
+  .activity-card h3 { font-size:1.2rem; margin:0 0 1rem; }
+  .activity-card h4 { margin:1rem 0 .6rem; }
+  .activity-music { grid-column:1/-1; }
+  .activity-metrics { display:flex; flex-wrap:wrap; gap:1rem 1.5rem; margin:1rem 0; }
+  .activity-metrics dt { font-size:.75rem; color:#aab8c7; }
+  .activity-metrics dd { margin:.25rem 0 0; font-size:1.35rem; font-weight:600; }
+  .activity-list { list-style:none; padding:0; }
+  .activity-list li { display:flex; flex-direction:column; gap:.3rem; padding:.7rem 0; border-bottom:1px solid #21262d; }
+  .activity-list a,.activity-credit a { color:#79bbff; text-underline-offset:3px; }
+  .activity-list span,.activity-note,.activity-credit { color:#aab8c7; font-size:.8rem; line-height:1.6; }
+  .activity-credit .source-link { margin:0; padding:0; }
+  .activity-mode + .activity-mode { border-top:1px solid #30363d; padding-top:.5rem; }
+  .playlist-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:1rem; }
+  .playlist { min-width:0; }
+  .playlist h4 { overflow-wrap:anywhere; }
+  .playlist iframe { display:block; border:0; border-radius:12px; }
+  .playlist .source-link { display:block; }
+  @media(max-width:600px) { .activity-grid { grid-template-columns:minmax(0,1fr); } .activity-card { padding:1rem; } }
   nav.tabs { flex-wrap:wrap; }
   .tab-btn { flex:1 1 auto; padding:.85rem 1rem; }
   .tab-drawer { scroll-margin-top:20px; }
@@ -576,7 +595,6 @@
     .timeline-list { padding-left:1rem; margin-left:.4rem; }
     .tl-dot { left:-1.48rem; }
     .tl-item { padding:.85rem; }
-    .guide-panel { padding:1rem; }
     .resume-toolbar { padding:.65rem; gap:.65rem; }
     .resume-toolbar span { flex-basis:100%; }
     .resume-toolbar .download-btn { flex:1; justify-content:center; }
@@ -625,11 +643,14 @@
       </button>
     </section>
 
-    <p class="guide-disclosure" id="guideDisclosure">🐸 Portfolio guide · Answers from my written notes. No live AI service.</p>
-    <section class="guide-panel" id="guidePanel" aria-label="Portfolio conversation" hidden>
-      <div class="guide-header"><h2>Ask Matthew’s portfolio</h2><button type="button" id="clearGuide">Clear conversation</button></div>
-      <div id="guideAnswers"></div>
-    </section>
+    <div class="guide-tools">
+      <p class="guide-disclosure" id="guideDisclosure">Portfolio guide · Answers from my written notes.</p>
+      <button type="button" class="read-answer" id="readAnswer" disabled>Read latest answer</button>
+    </div>
+    <dialog class="answer-dialog" id="answerDialog" aria-labelledby="answerTitle">
+      <button type="button" id="closeAnswer" class="answer-close">Close</button>
+      <div id="answerText"></div>
+    </dialog>
     <div id="guideStatus" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <!-- Portfolio navigation -->
     <nav class="tabs" role="tablist" aria-label="Portfolio sections">
@@ -642,6 +663,7 @@
       <button type="button" class="tab-btn" data-tab="research_resume" style="--c: var(--teal)">Research resume</button>
 
 
+      <button type="button" class="tab-btn" data-tab="activity" style="--c: var(--yellow)">Off duty</button>
     </nav>
 
     <!-- Interactive tab drawer -->

@@ -26,7 +26,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
 
       - name: Verify WebGL and Assets
         run: |
@@ -55,13 +59,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm ci
+      - run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "dist"
 
       - name: Deploy to GitHub Pages
         id: deployment
