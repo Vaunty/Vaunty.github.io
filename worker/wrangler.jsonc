@@ -1,0 +1,16 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "matthew-portfolio-activity",
+  "main": "index.js",
+  "compatibility_date": "2026-11-06",
+  "compatibility_flags": ["nodejs_compat"],
+  "upload_source_maps": true,
+  "observability": { "enabled": true, "head_sampling_rate": 0.1 },
+  "vars": {
+    "ALLOWED_ORIGIN": "https://vaunty.github.io",
+    "PREVIEW_ORIGIN": "https://matthew-portfolio-preview.matthew-portfolio.workers.dev",
+    "FINALS_USERNAME": "Girbaud#8191",
+    "STEAM_ID": "76561198145578413"
+  },
+  "ratelimits": [{ "name": "RATE_LIMITER", "namespace_id": "1002", "simple": { "limit": 30, "period": 60 } }]
+}

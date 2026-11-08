@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "matthew-portfolio-preview",
+  "compatibility_date": "2026-11-06",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "dist"
+  }
+}
