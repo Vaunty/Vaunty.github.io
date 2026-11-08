@@ -175,6 +175,8 @@ export const TABS = {
     "cards": [
       {
         "title": "CougarCTF 2027",
+        "link": "https://cougarctf.tech/",
+        "linkLabel": "Visit CougarCTF",
         "meta": "Co-developer · Sep. 2026 – present",
         "desc": "Co-develop challenges and reference solvers with two teammates and AI assistance. Strengthened CI checks and corrected a leaked flag and 10 hint/text issues identified in player-view review.",
         "tags": [
